@@ -1,0 +1,25 @@
+{
+  "name": "keep",
+  "version": "1.0.0",
+  "description": "Keep PWA",
+  "main": "index.js",
+  "type": "module",  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KashirskiyDenis/keep.git"
+  },
+  "keywords": [
+    "keep",
+    "PWA"
+  ],
+  "author": "Denis Kashirskiy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KashirskiyDenis/keep/issues"
+  },
+  "homepage": "https://github.com/KashirskiyDenis/keep#readme"
+}

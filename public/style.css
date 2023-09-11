@@ -1,0 +1,81 @@
+body {
+    font-family: segoe ui, Arial, sans-serif;
+    font-size: 16px;
+    margin: 0px;
+	user-select: none;
+}
+.container {
+}
+h1 {
+	font-weight: 400;
+    margin: 0px;
+	padding: 10px 20px;	
+}
+h2 {
+    font-weight: 400;
+    margin: 0px 10px;
+	padding-bottom: 5px;
+}
+header {
+	/* position: fixed; */
+}
+.content {
+	padding: 0px 15px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: start;
+}
+.note {
+	border: 1px solid #e3e3e3;
+	border-radius: 5px;
+	box-sizing: border-box;
+	cursor: pointer;
+	max-height: 400px;
+	overflow-y: hidden;
+	padding: 0px 10px;
+	margin: 15px;
+	width: 250px;
+}
+.note-title {
+	font-weight: 500;
+	margin: 10px 0px;
+}
+.to-do-point, .complete-point {
+	margin: 10px;
+}
+.to-do-point input, .complete-point input {
+	margin: 0px;
+}
+.to-do-point p, .complete-point p {
+	display: inline-block;
+	margin: 0px 5px;
+}
+.complete-point p {
+	color: #919191;
+	text-decoration: line-through;
+}
+.button {
+	box-sizing: content-box;
+	color: #0075ff;
+	background-color: #ffffff;
+	font-size: 1rem;
+	border: 1px solid #0075ff;
+	line-height: 1.5rem;
+	box-shadow: 0.25rem 0.25rem 0.25rem #d3d3d3;
+	margin: 5px 0px;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+.button-circle {
+	border-radius: 50%;
+	height: 8rem;
+	width: 8rem;
+	font-size: 8.0rem;
+	padding: 0;
+	position: fixed;
+}
+.button-circle-add {
+	bottom: 1.5rem;
+	right: 1.5rem;
+}	
