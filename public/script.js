@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			request.onload = function () {
 				if (this.status === 200) {
 					resolve(this.response);
-				} else if (this.status === 422) {
+					} else if (this.status === 422) {
 					reject(this.responseText);
-				} else {
+					} else {
 					let error = new Error(this.statusText);
 					error.code = this.status;
 					reject(error);
@@ -31,21 +31,40 @@ document.addEventListener('DOMContentLoaded', function () {
 		return promise;
 	};
 	
-	let formatMoney = (str) => {
-		str = str.split('').reverse().join('');
-		let arr = str.split(/(\d{1,3})/).reverse();
-		
-		for (let i = 0; i < arr.length; i++) {
-			arr[i] = arr[i].split('').reverse().join('');
-		}
-		
-		return arr.join(' ').trim();
-	};	
-	
 	addKeep.addEventListener('click', () => {
 		currentDialog.showModal();
 		hiddenEntityAdd(currentMenu.id);
 		resetForm();
 	});
+	
+	let dragStart = (event) => {
+		event.dataTransfer.setData('text/html', event.target.id);
+		// console.log('width ' + event.target.clientWidth);
+		// console.log('height ' + event.target.clientHeight);
+	};
+	
+	let dragOver = (event) => {
+		event.preventDefault();
+	};
+	
+	let drop = (event) => {
+		let id = event.dataTransfer.getData('text/html');
+		let draggableElement = document.getElementById(id);
+		let dropzone = event.target;
+		if (dropzone.id != 'notes')
+			return;
+		dropzone.appendChild(draggableElement);
+		event.dataTransfer.clearData();
+	};
+	
+	let noteList = document.querySelectorAll('.note');
+	for (let i = 0; i < noteList.length; i++) {
+		noteList[i].addEventListener('dragstart', dragStart);
+	}
+	
+	let notes = document.querySelector('#notes');
+	notes.addEventListener('drop', drop);
+	notes.addEventListener('dragover', dragOver);
+	
 	
 });
