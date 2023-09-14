@@ -1,8 +1,9 @@
-body {
+html, body {
     font-family: segoe ui, Arial, sans-serif;
     font-size: 16px;
     margin: 0px;
 	user-select: none;
+	height: 100%;
 }
 body::-webkit-scrollbar-track {
 	background-color: #e3e3e3;
@@ -12,6 +13,7 @@ body::-webkit-scrollbar-thumb {
 	border-radius: 5px;
 }
 .container {
+	min-height: 100%;
 }
 h1 {
 	font-weight: 400;
@@ -32,6 +34,7 @@ header {
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: start;
+	min-height: 100%;
 }
 .note {
 	background-color: #fff;
@@ -48,6 +51,12 @@ header {
 .note:hover {
 	overflow-y: auto;
 }
+.note-hover {
+	box-shadow: 0.25rem 0.25rem 0.25rem #d3d3d3;
+}
+.note-drag {
+	box-shadow: 0px 0px 1rem #919191;	
+}
 *::-webkit-scrollbar {
 	width: 10px;
 }
@@ -61,9 +70,7 @@ header {
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
 }
-.note:hover {
-	box-shadow: 0.25rem 0.25rem 0.25rem #d3d3d3;
-}
+
 .note-title {
 	font-weight: 500;
 	margin: 10px 0px;

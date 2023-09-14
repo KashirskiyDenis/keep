@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		resetForm();
 	});
 	
-	function dragStart(event) {
+	
+	let dragStart = (event) => {
 		return false;
 		
 		event.dataTransfer.setData('text/plain', event.target.id);
@@ -46,8 +47,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		// console.log('height ' + event.target.clientHeight);
 	};
 	
-	let dragMouseDown = (event) => {
+	let dragOver = (event) => {
+		
+	};
+	
+	let mouseDown = (event) => {
+		event.stopPropagation();
+		
 		let note = event.currentTarget.cloneNode(true);
+		// let note = event.currentTarget;
+		
+		let shiftX = event.clientX - event.currentTarget.getBoundingClientRect().left + 10;
+		let shiftY = event.clientY - event.currentTarget.getBoundingClientRect().top + 10;
 		let hole = document.createElement('div');
 		
 		hole.style.width = event.currentTarget.offsetWidth + 'px';
@@ -55,24 +66,46 @@ document.addEventListener('DOMContentLoaded', function () {
 		hole.style.margin = '10px';
 		
 		note.style.position = 'absolute';
-		note.style.left = event.pageX - event.currentTarget.offsetWidth / 2 + 'px';
-		note.style.top = event.pageY - event.currentTarget.offsetHeight / 2 + 'px';
+		note.style.left = event.pageX - shiftX + 'px';
+		note.style.top = event.pageY - shiftY + 'px';
+		note.classList.remove('note-hover');
+		note.classList.add('note-drag');
+		
+		// console.log(note.style.left);
+		// console.log(note.style.top);
+		// console.log('event.pageX ' + event.pageX);
+		// console.log('event.pageY ' + event.pageY);
+		// console.log('shiftX ' + shiftX);
+		// console.log('shiftY ' + shiftY);
 		
 		event.currentTarget.parentNode.replaceChild(hole, event.currentTarget);
+		note.addEventListener('mousedown', mouseDown, true);
 		document.body.appendChild(note);
 		
 		let mouseMove = (ev) => {
-			note.style.left = ev.pageX - ev.currentTarget.offsetWidth / 2 + 'px';
-			note.style.top = ev.pageY - ev.currentTarget.offsetHeight / 2 + 'px';
-			
-		};		
-	
+			note.style.left = ev.pageX - shiftX + 'px';
+			note.style.top = ev.pageY - shiftY + 'px';
+		};
+		
 		document.addEventListener('mousemove', mouseMove);
+		
+		function mouseUp() {
+			document.removeEventListener('mousemove', mouseMove);
+			this.removeEventListener('mouseup', mouseUp);
+			this.classList.remove('note-drag');
+			this.addEventListener('mouseover', () => {
+				this.classList.add('note-hover');
+			});
+			this.addEventListener('mouseleave', () => {
+				this.classList.remove('note-hover');
+			});			
+		}
+		
+		note.addEventListener('mouseup', mouseUp);
 	};
 	
-	
-	let dragOver = (event) => {
-		event.preventDefault();
+	let mouseOver = (event) => {
+		
 	};
 	
 	let drop = (event) => {
@@ -88,16 +121,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	let noteList = document.querySelectorAll('.note');
 	for (let i = 0; i < noteList.length; i++) {
-		noteList[i].addEventListener('dragstart', dragStart);
-		noteList[i].addEventListener('mousedown', dragMouseDown);
-		noteList[i].addEventListener('mouseup', () => {
-			document.removeEventListener('mousemove');
-			noteList[i].removeEventListener('mouseup');
+		noteList[i].addEventListener('mousedown', mouseDown, true);
+		noteList[i].addEventListener('mouseover', () => {
+			noteList[i].classList.add('note-hover');
+		});
+		noteList[i].addEventListener('mouseleave', () => {
+			noteList[i].classList.remove('note-hover');
+		});
+		noteList[i].addEventListener('dragover', () => {
+			console.log('fuck');
 		});
 	}
-	
-	let notes = document.querySelector('#notes');
-	// notes.addEventListener('drop', drop);
-	notes.addEventListener('dragover', dragOver);
-	
 });
