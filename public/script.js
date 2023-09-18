@@ -51,8 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	};
 	
 	let mouseDownNote = (event) => {
-		event.stopPropagation();
-		
 		let noteIndex = -1;
 		
 		for (let i = 0; i < notes.length; i++) {
@@ -61,14 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
 				break;
 			}
 		}
-
+		
 		let note = event.currentTarget.cloneNode(true);
 		let shiftX = event.clientX - event.currentTarget.getBoundingClientRect().left + 10;
 		let shiftY = event.clientY - event.currentTarget.getBoundingClientRect().top + 10;
 		let hole = document.createElement('div');
 		
 		hole.style.width = event.currentTarget.offsetWidth + 'px';
-		hole.style.height = event.currentTarget.offsetHeight + 'px';
+		hole.style.boxSizing = 'border-box';
 		hole.style.margin = '10px';
 		
 		note.style.position = 'absolute';
@@ -78,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		note.classList.add('note-drag');
 		
 		event.currentTarget.parentNode.replaceChild(hole, event.currentTarget);
-		note.addEventListener('mousedown', mouseDownNote, true);
+		note.addEventListener('mousedown', mouseDownNote);
 		document.body.appendChild(note);
 		
 		let newPositionNote = (ev) => {
@@ -96,14 +94,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (noteOver) {
 				for (let i = 0; i < notes.length; i++) {
 					if (noteOver == notes[i]) {
-						// let noteParent = noteOver.parentNode;
-						if (noteIndex < i) {
-							for (let j = noteIndex; j <= i; j++) {
-								notes[j].replaceWith(notes[j + 1]);
-							}
-						} else {
-						
+						if (i > noteIndex) {
+							notes[i].insertAdjacentElement('afterend', hole);
+							} else {
+							notes[i].insertAdjacentElement('beforebegin', hole);
 						}
+						noteIndex = i;
 						break;
 					}
 				}
@@ -114,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.addEventListener('mousemove', overNote);
 		
 		function mouseUpNote() {
+			note.removeAttribute('style');
+			hole.parentNode.replaceChild(note, hole);
 			document.removeEventListener('mousemove', newPositionNote);
 			document.removeEventListener('mousemove', overNote);
 			this.removeEventListener('mouseup', mouseUpNote);
@@ -123,25 +121,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 			this.addEventListener('mouseleave', () => {
 				this.classList.remove('note-hover');
-			});		
+			});
 		}
 		
 		note.addEventListener('mouseup', mouseUpNote);
-	};
-	
-	let mouseOver = (event) => {
-		
-	};
-	
-	let drop = (event) => {
-		let id = event.dataTransfer.getData('text/plain');
-		let draggableElement = document.getElementById(id);
-		draggableElement.style.position = 'relative';
-		let dropzone = event.target;
-		if (dropzone.id != 'notes')
-		return;
-		dropzone.appendChild(draggableElement);
-		event.dataTransfer.clearData();
 	};
 	
 	let noteList = document.querySelectorAll('.note');
@@ -149,9 +132,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		noteList[i].addEventListener('mouseenter', () => {
 			noteList[i].classList.add('note-hover');
 		});
-		noteList[i].addEventListener('mousedown', mouseDownNote, true);
+		noteList[i].addEventListener('mousedown', mouseDownNote);
 		noteList[i].addEventListener('mouseleave', () => {
 			noteList[i].classList.remove('note-hover');
 		});
+		
 	}
 });
