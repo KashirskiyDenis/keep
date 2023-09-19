@@ -50,9 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
 		return element
 	};
 	
-	let mouseDownNote = (event) => {
-		let noteIndex = -1;
-		
+	let draggbleNote = null;
+	let shiftX = null;
+	let shiftY = null;
+	let noteIndex = -1;
+	let timeDown = 0;
+	let timesUp = 0;
+	let noteMoveFlag = false;
+	
+	let mouseDownNote = (event) => {		
 		for (let i = 0; i < notes.length; i++) {
 			if (event.currentTarget == notes[i]) {
 				noteIndex = i;
@@ -60,72 +66,90 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		}
 		
-		let note = event.currentTarget.cloneNode(true);
-		let shiftX = event.clientX - event.currentTarget.getBoundingClientRect().left + 10;
-		let shiftY = event.clientY - event.currentTarget.getBoundingClientRect().top + 10;
 		let hole = document.createElement('div');
+		draggbleNote = event.currentTarget;
+		// draggbleNote = event.currentTarget.cloneNode(true);
+		shiftX = event.clientX - draggbleNote.getBoundingClientRect().left + 10;
+		shiftY = event.clientY - draggbleNote.getBoundingClientRect().top + 10;
 		
-		hole.style.width = event.currentTarget.offsetWidth + 'px';
+		hole.id = 'hole';
+		hole.style.width = draggbleNote.offsetWidth + 'px';
 		hole.style.boxSizing = 'border-box';
 		hole.style.margin = '10px';
 		
-		note.style.position = 'absolute';
-		note.style.left = event.pageX - shiftX + 'px';
-		note.style.top = event.pageY - shiftY + 'px';
-		note.classList.remove('note-hover');
-		note.classList.add('note-drag');
+		draggbleNote.style.position = 'absolute';
+		draggbleNote.style.left = event.pageX - shiftX + 'px';
+		draggbleNote.style.top = event.pageY - shiftY + 'px';
+		draggbleNote.classList.remove('note-hover');
+		draggbleNote.classList.add('note-drag');
 		
-		event.currentTarget.parentNode.replaceChild(hole, event.currentTarget);
-		note.addEventListener('mousedown', mouseDownNote);
-		document.body.appendChild(note);
+		draggbleNote.parentNode.replaceChild(hole, draggbleNote);
+		document.body.appendChild(draggbleNote);
 		
-		let newPositionNote = (ev) => {
-			note.style.left = ev.pageX - shiftX + 'px';
-			note.style.top = ev.pageY - shiftY + 'px';
-		};
-		
-		let overNote = (ev) => {
-			note.hidden = true;
-			let noteOver = checkDragOverNote(ev);
-			note.hidden = false;
-			
-			notes = document.getElementById('notes').children;
-			
-			if (noteOver) {
-				for (let i = 0; i < notes.length; i++) {
-					if (noteOver == notes[i]) {
-						if (i > noteIndex) {
-							notes[i].insertAdjacentElement('afterend', hole);
-							} else {
-							notes[i].insertAdjacentElement('beforebegin', hole);
-						}
-						noteIndex = i;
-						break;
-					}
-				}
-			}
-		};
-		
+		document.addEventListener('mousemove', noteMove);
 		document.addEventListener('mousemove', newPositionNote);
 		document.addEventListener('mousemove', overNote);
-		
-		function mouseUpNote() {
-			note.removeAttribute('style');
-			hole.parentNode.replaceChild(note, hole);
-			document.removeEventListener('mousemove', newPositionNote);
-			document.removeEventListener('mousemove', overNote);
-			this.removeEventListener('mouseup', mouseUpNote);
-			this.classList.remove('note-drag');
-			this.addEventListener('mouseover', () => {
-				this.classList.add('note-hover');
-			});
-			this.addEventListener('mouseleave', () => {
-				this.classList.remove('note-hover');
-			});
-		}
-		
-		note.addEventListener('mouseup', mouseUpNote);
+		draggbleNote.addEventListener('mouseup', mouseUpNote);
 	};
+	
+	let noteMove = () => {
+		noteMoveFlag = true;
+	};
+	
+	let newPositionNote = (event) => {
+		draggbleNote.style.left = event.pageX - shiftX + 'px';
+		draggbleNote.style.top = event.pageY - shiftY + 'px';
+	};
+	
+	let overNote = (event) => {
+		let hole = document.getElementById('hole');
+		draggbleNote.hidden = true;
+		let noteOver = checkDragOverNote(event);
+		draggbleNote.hidden = false;
+		
+		notes = document.getElementById('notes').children;
+		
+		if (noteOver) {
+			for (let i = 0; i < notes.length; i++) {
+				if (noteOver == notes[i]) {
+					if (i > noteIndex) {
+						notes[i].insertAdjacentElement('afterend', hole);
+						} else {
+						notes[i].insertAdjacentElement('beforebegin', hole);
+					}
+					noteIndex = i;
+					break;
+				}
+			}
+		}
+	};
+	
+	function mouseUpNote() {
+		draggbleNote.removeAttribute('style');
+		
+		let hole = document.getElementById('hole');
+		hole.parentNode.replaceChild(draggbleNote, hole);
+		
+		document.removeEventListener('mousemove', noteMove);
+		document.removeEventListener('mousemove', newPositionNote);
+		document.removeEventListener('mousemove', overNote);
+		
+		this.removeEventListener('mouseup', mouseUpNote);
+		this.classList.remove('note-drag');
+		this.addEventListener('mouseover', () => {
+			this.classList.add('note-hover');
+		});
+		this.addEventListener('mouseleave', () => {
+			this.classList.remove('note-hover');
+		});
+		draggbleNote = null;
+		noteIndex = -1;
+		
+		if (!noteMoveFlag) {
+			console.log('click');
+		}
+		noteMoveFlag = false;
+	}
 	
 	let noteList = document.querySelectorAll('.note');
 	for (let i = 0; i < noteList.length; i++) {
@@ -136,6 +160,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		noteList[i].addEventListener('mouseleave', () => {
 			noteList[i].classList.remove('note-hover');
 		});
-		
 	}
+	
+	let openNote = ()=> {
+		
+	};
 });
