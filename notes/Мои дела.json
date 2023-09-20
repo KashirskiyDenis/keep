@@ -1,0 +1,19 @@
+{
+	"color": "DEFAULT",
+	"isTrashed": true,
+	"isPinned": false,
+	"isArchived": false,
+	"listContent": [
+		{
+			"text": "Септопластика",
+			"isChecked": false
+		},
+		{
+			"text": "Зал",
+			"isChecked": false
+		}
+	],
+	"title": "Мои дела",
+	"userEditedTimestampUsec": 1694157045128000,
+	"createdTimestampUsec": 1694155455193000
+}

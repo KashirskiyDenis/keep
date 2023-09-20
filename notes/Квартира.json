@@ -1,0 +1,99 @@
+{
+	"color": "DEFAULT",
+	"isTrashed": false,
+	"isPinned": false,
+	"isArchived": true,
+	"listContent": [
+		{
+			"text": "Карниз и шторы",
+			"isChecked": false
+		},
+		{
+			"text": "Ящик",
+			"isChecked": false
+		},
+		{
+			"text": "Подвесной ящик",
+			"isChecked": false
+		},
+		{
+			"text": "Стекло на телефон",
+			"isChecked": false
+		},
+		{
+			"text": "Духовка",
+			"isChecked": false
+		},
+		{
+			"text": "Сплит система",
+			"isChecked": false
+		},
+		{
+			"text": "Шкаф в комнату",
+			"isChecked": true
+		},
+		{
+			"text": "Сетка",
+			"isChecked": true
+		},
+		{
+			"text": "Затирка",
+			"isChecked": true
+		},
+		{
+			"text": "Обувница",
+			"isChecked": true
+		},
+		{
+			"text": "Вантус",
+			"isChecked": true
+		},
+		{
+			"text": "Тумбочка 2 шт.",
+			"isChecked": true
+		},
+		{
+			"text": "Силиконовые стопоры",
+			"isChecked": true
+		},
+		{
+			"text": "Ножки для кровати",
+			"isChecked": true
+		},
+		{
+			"text": "Светильник",
+			"isChecked": true
+		},
+		{
+			"text": "Батарейки АА",
+			"isChecked": true
+		},
+		{
+			"text": "Перечницы",
+			"isChecked": true
+		},
+		{
+			"text": "Сито",
+			"isChecked": true
+		},
+		{
+			"text": "Разъёмная форма",
+			"isChecked": true
+		},
+		{
+			"text": "Силикон",
+			"isChecked": true
+		},
+		{
+			"text": "Смеситель",
+			"isChecked": true
+		},
+		{
+			"text": "Столик для колонок",
+			"isChecked": true
+		}
+	],
+	"title": "Квартира",
+	"userEditedTimestampUsec": 1677905001623000,
+	"createdTimestampUsec": 1664686949202000
+}

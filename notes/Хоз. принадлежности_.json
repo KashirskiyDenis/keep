@@ -1,0 +1,155 @@
+{
+	"color": "DEFAULT",
+	"isTrashed": false,
+	"isPinned": false,
+	"isArchived": false,
+	"listContent": [
+		{
+			"text": "Пенка для умывания",
+			"isChecked": false
+		},
+		{
+			"text": "Средство для пола",
+			"isChecked": false
+		},
+		{
+			"text": "Тоник",
+			"isChecked": false
+		},
+		{
+			"text": "Средство для чистки труб",
+			"isChecked": true
+		},
+		{
+			"text": "Крем для глаз",
+			"isChecked": true
+		},
+		{
+			"text": "Пилинг для волос",
+			"isChecked": true
+		},
+		{
+			"text": "Лейкопластырь",
+			"isChecked": true
+		},
+		{
+			"text": "Салфетки влажные",
+			"isChecked": true
+		},
+		{
+			"text": "Губки",
+			"isChecked": true
+		},
+		{
+			"text": "Ополаскиватель для рта",
+			"isChecked": true
+		},
+		{
+			"text": "Салфетки",
+			"isChecked": true
+		},
+		{
+			"text": "Зубная щётка",
+			"isChecked": true
+		},
+		{
+			"text": "Краска для волос",
+			"isChecked": true
+		},
+		{
+			"text": "Зубная паста",
+			"isChecked": true
+		},
+		{
+			"text": "Салфетки антисептические",
+			"isChecked": true
+		},
+		{
+			"text": "Белизна",
+			"isChecked": true
+		},
+		{
+			"text": "Пемолюкс",
+			"isChecked": true
+		},
+		{
+			"text": "Дезодорант",
+			"isChecked": true
+		},
+		{
+			"text": "Пакеты для продуктов",
+			"isChecked": true
+		},
+		{
+			"text": "Порошок стиральный",
+			"isChecked": true
+		},
+		{
+			"text": "Пакеты для заморозки",
+			"isChecked": true
+		},
+		{
+			"text": "Туалетная бумага",
+			"isChecked": true
+		},
+		{
+			"text": "Ватные диски",
+			"isChecked": true
+		},
+		{
+			"text": "Пакеты для мусора",
+			"isChecked": true
+		},
+		{
+			"text": "Мыло",
+			"isChecked": true
+		},
+		{
+			"text": "Пемза",
+			"isChecked": true
+		},
+		{
+			"text": "Пищевая пленка",
+			"isChecked": true
+		},
+		{
+			"text": "Перчатки для уборки",
+			"isChecked": true
+		},
+		{
+			"text": "Клей",
+			"isChecked": true
+		},
+		{
+			"text": "Крем для рук",
+			"isChecked": true
+		},
+		{
+			"text": "Бритвы",
+			"isChecked": true
+		},
+		{
+			"text": "Гель после бритья",
+			"isChecked": true
+		},
+		{
+			"text": "Гель для бритья",
+			"isChecked": true
+		},
+		{
+			"text": "Сыворотка",
+			"isChecked": true
+		},
+		{
+			"text": "Бальзам для волос",
+			"isChecked": true
+		},
+		{
+			"text": "Ежедневки",
+			"isChecked": true
+		}
+	],
+	"title": "Хоз. принадлежности",
+	"userEditedTimestampUsec": 1694256525574000,
+	"createdTimestampUsec": 1664686949154000
+}

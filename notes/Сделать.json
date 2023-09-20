@@ -1,0 +1,87 @@
+{
+	"color": "DEFAULT",
+	"isTrashed": false,
+	"isPinned": false,
+	"isArchived": false,
+	"listContent": [
+		{
+			"text": "Септопластика",
+			"isChecked": false
+		},
+		{
+			"text": "Тренировки",
+			"isChecked": false
+		},
+		{
+			"text": "Катамараны",
+			"isChecked": false
+		},
+		{
+			"text": "Выкинуть батарейки",
+			"isChecked": true
+		},
+		{
+			"text": "Уборка",
+			"isChecked": true
+		},
+		{
+			"text": "Готовка",
+			"isChecked": true
+		},
+		{
+			"text": "Речь на свадьбу",
+			"isChecked": true
+		},
+		{
+			"text": "Спросить что пить",
+			"isChecked": true
+		},
+		{
+			"text": "Спросить что есть",
+			"isChecked": true
+		},
+		{
+			"text": "Забрать ремень",
+			"isChecked": true
+		},
+		{
+			"text": "Зашить карман",
+			"isChecked": true
+		},
+		{
+			"text": "Зашить кофту",
+			"isChecked": true
+		},
+		{
+			"text": "Забрать таблетки",
+			"isChecked": true
+		},
+		{
+			"text": "Подстричься",
+			"isChecked": true
+		},
+		{
+			"text": "Написать неврологу",
+			"isChecked": true
+		},
+		{
+			"text": "Клиника офтольмологии",
+			"isChecked": true
+		},
+		{
+			"text": "Измерить полку 55",
+			"isChecked": true
+		},
+		{
+			"text": "Забрать карту",
+			"isChecked": true
+		},
+		{
+			"text": "Купить вкушняшку",
+			"isChecked": true
+		}
+	],
+	"title": "Сделать",
+	"userEditedTimestampUsec": 1694157045245000,
+	"createdTimestampUsec": 1684414098982000
+}

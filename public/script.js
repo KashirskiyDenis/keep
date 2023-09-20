@@ -162,7 +162,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 	
-	let openNote = ()=> {
+	let openNote = () => {
 		
 	};
+	
+	let noteDialog = document.getElementById('noteDialog');
+	// noteDialog.showModal();
 });

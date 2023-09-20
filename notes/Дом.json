@@ -1,0 +1,27 @@
+{
+	"color": "DEFAULT",
+	"isTrashed": false,
+	"isPinned": false,
+	"isArchived": false,
+	"listContent": [
+		{
+			"text": "Уборка",
+			"isChecked": false
+		},
+		{
+			"text": "Сетка на лоджию",
+			"isChecked": false
+		},
+		{
+			"text": "Сплит система",
+			"isChecked": false
+		},
+		{
+			"text": "Мультиметр",
+			"isChecked": true
+		}
+	],
+	"title": "Дом",
+	"userEditedTimestampUsec": 1694155455039000,
+	"createdTimestampUsec": 1686193653466000
+}

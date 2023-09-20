@@ -1,0 +1,387 @@
+{
+	"color": "DEFAULT",
+	"isTrashed": true,
+	"isPinned": false,
+	"isArchived": false,
+	"listContent": [
+		{
+			"text": "Виноград",
+			"isChecked": true
+		},
+		{
+			"text": "Кетчуп",
+			"isChecked": true
+		},
+		{
+			"text": "Дыня",
+			"isChecked": true
+		},
+		{
+			"text": "Редиска",
+			"isChecked": true
+		},
+		{
+			"text": "Сыр плавленый",
+			"isChecked": true
+		},
+		{
+			"text": "Имбирь",
+			"isChecked": true
+		},
+		{
+			"text": "Корица",
+			"isChecked": true
+		},
+		{
+			"text": "Творог",
+			"isChecked": true
+		},
+		{
+			"text": "Масло сливочное",
+			"isChecked": true
+		},
+		{
+			"text": "Сметана",
+			"isChecked": true
+		},
+		{
+			"text": "Молоко",
+			"isChecked": true
+		},
+		{
+			"text": "Лук",
+			"isChecked": true
+		},
+		{
+			"text": "Соевый соус",
+			"isChecked": true
+		},
+		{
+			"text": "Курица",
+			"isChecked": true
+		},
+		{
+			"text": "Хлопья",
+			"isChecked": true
+		},
+		{
+			"text": "Йогурт",
+			"isChecked": true
+		},
+		{
+			"text": "Наггетсы",
+			"isChecked": true
+		},
+		{
+			"text": "Фрукты",
+			"isChecked": true
+		},
+		{
+			"text": "Кунжутное масло",
+			"isChecked": true
+		},
+		{
+			"text": "Помидоры",
+			"isChecked": true
+		},
+		{
+			"text": "Болгарский перец",
+			"isChecked": true
+		},
+		{
+			"text": "Булочка",
+			"isChecked": true
+		},
+		{
+			"text": "Макароны",
+			"isChecked": true
+		},
+		{
+			"text": "Кукуруза",
+			"isChecked": true
+		},
+		{
+			"text": "Кефир",
+			"isChecked": true
+		},
+		{
+			"text": "Паприка",
+			"isChecked": true
+		},
+		{
+			"text": "Рис",
+			"isChecked": true
+		},
+		{
+			"text": "Карри",
+			"isChecked": true
+		},
+		{
+			"text": "Морковь",
+			"isChecked": true
+		},
+		{
+			"text": "Чесночный соус",
+			"isChecked": true
+		},
+		{
+			"text": "Сырный соус",
+			"isChecked": true
+		},
+		{
+			"text": "Петрушка ",
+			"isChecked": true
+		},
+		{
+			"text": "Базилик ",
+			"isChecked": true
+		},
+		{
+			"text": "Творожный сыр",
+			"isChecked": true
+		},
+		{
+			"text": "Томатный сок",
+			"isChecked": true
+		},
+		{
+			"text": "Крахмал",
+			"isChecked": true
+		},
+		{
+			"text": "Лаваш",
+			"isChecked": true
+		},
+		{
+			"text": "Ванилин",
+			"isChecked": true
+		},
+		{
+			"text": "Чеснок",
+			"isChecked": true
+		},
+		{
+			"text": "Разрыхлитель",
+			"isChecked": true
+		},
+		{
+			"text": "Укроп",
+			"isChecked": true
+		},
+		{
+			"text": "Печень",
+			"isChecked": true
+		},
+		{
+			"text": "Сливки",
+			"isChecked": true
+		},
+		{
+			"text": "Спагетти",
+			"isChecked": true
+		},
+		{
+			"text": "Рис рассыпчатый",
+			"isChecked": true
+		},
+		{
+			"text": "Картошка",
+			"isChecked": true
+		},
+		{
+			"text": "Лимонная кислота",
+			"isChecked": true
+		},
+		{
+			"text": "Сахар",
+			"isChecked": true
+		},
+		{
+			"text": "Гречка",
+			"isChecked": true
+		},
+		{
+			"text": "Яйца",
+			"isChecked": true
+		},
+		{
+			"text": "Лимон",
+			"isChecked": true
+		},
+		{
+			"text": "Бананы",
+			"isChecked": true
+		},
+		{
+			"text": "Творожная масса",
+			"isChecked": true
+		},
+		{
+			"text": "Майонез",
+			"isChecked": true
+		},
+		{
+			"text": "Ряженка",
+			"isChecked": true
+		},
+		{
+			"text": "Колбаса",
+			"isChecked": true
+		},
+		{
+			"text": "Огурцы",
+			"isChecked": true
+		},
+		{
+			"text": "Чай",
+			"isChecked": true
+		},
+		{
+			"text": "Сыр в пластинках",
+			"isChecked": true
+		},
+		{
+			"text": "Сосиски",
+			"isChecked": true
+		},
+		{
+			"text": "Морковь по корейски",
+			"isChecked": true
+		},
+		{
+			"text": "Сыр",
+			"isChecked": true
+		},
+		{
+			"text": "Желатин",
+			"isChecked": true
+		},
+		{
+			"text": "Груша",
+			"isChecked": true
+		},
+		{
+			"text": "Хурма",
+			"isChecked": true
+		},
+		{
+			"text": "Перец душистый",
+			"isChecked": true
+		},
+		{
+			"text": "Криветки",
+			"isChecked": true
+		},
+		{
+			"text": "Перец белый",
+			"isChecked": true
+		},
+		{
+			"text": "4 перца",
+			"isChecked": true
+		},
+		{
+			"text": "Свинина",
+			"isChecked": true
+		},
+		{
+			"text": "Чернослив",
+			"isChecked": true
+		},
+		{
+			"text": "Чай вечерний",
+			"isChecked": true
+		},
+		{
+			"text": "Яблочный уксус",
+			"isChecked": true
+		},
+		{
+			"text": "Ананасовый сок",
+			"isChecked": true
+		},
+		{
+			"text": "Печенье",
+			"isChecked": true
+		},
+		{
+			"text": "Фарш",
+			"isChecked": true
+		},
+		{
+			"text": "Листы для жарки курицы",
+			"isChecked": true
+		},
+		{
+			"text": "Чай в пакетиках",
+			"isChecked": true
+		},
+		{
+			"text": "Хлеб",
+			"isChecked": true
+		},
+		{
+			"text": "Капуста",
+			"isChecked": true
+		},
+		{
+			"text": "Шпинат",
+			"isChecked": true
+		},
+		{
+			"text": "Щавель",
+			"isChecked": true
+		},
+		{
+			"text": "Сахар кусочками",
+			"isChecked": true
+		},
+		{
+			"text": "Куркума",
+			"isChecked": true
+		},
+		{
+			"text": "Хмели сунели",
+			"isChecked": true
+		},
+		{
+			"text": "Гранатовый сок",
+			"isChecked": true
+		},
+		{
+			"text": "Хлебцы",
+			"isChecked": true
+		},
+		{
+			"text": "Ромашка",
+			"isChecked": true
+		},
+		{
+			"text": "Йогурт обычный",
+			"isChecked": true
+		},
+		{
+			"text": "Кунжут",
+			"isChecked": true
+		},
+		{
+			"text": "Мак",
+			"isChecked": true
+		},
+		{
+			"text": "Сода",
+			"isChecked": true
+		},
+		{
+			"text": "Мука",
+			"isChecked": true
+		},
+		{
+			"text": "Масло подсолнечное",
+			"isChecked": true
+		}
+	],
+	"title": "Продукты",
+	"userEditedTimestampUsec": 1694412872192000,
+	"createdTimestampUsec": 1694412872192000
+}

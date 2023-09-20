@@ -78,17 +78,17 @@ header {
 .to-do {
 	border-bottom: 1px solid #e3e3e3;
 }
-.to-do-point, .complete-point {
+.to-do-point, .checked-point {
 	margin: 10px;
 }
-.to-do-point input, .complete-point input {
+.to-do-point input, .checked-point input {
 	margin: 0px;
 }
-.to-do-point p, .complete-point p {
+.to-do-point p, .checked-point p {
 	display: inline-block;
 	margin: 0px 5px;
 }
-.complete-point p {
+.checked-point p {
 	color: #919191;
 	text-decoration: line-through;
 }
@@ -115,4 +115,9 @@ header {
 .button-circle-add {
 	bottom: 1.5rem;
 	right: 1.5rem;
+}
+dialog {
+	width: 600px;
+	border: 1px solid #1978d2;
+	border-radius: 7px;
 }
