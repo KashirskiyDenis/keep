@@ -166,6 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 	};
 	
-	let noteDialog = document.getElementById('noteDialog');
-	// noteDialog.showModal();
+	let noteDialog = document.getElementById('dialog-Note');
+	noteDialog.showModal();
 });

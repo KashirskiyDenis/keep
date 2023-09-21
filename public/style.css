@@ -55,7 +55,8 @@ header {
 	box-shadow: 0px 0px 0.25rem #d3d3d3;
 }
 .note-drag {
-	box-shadow: 0px 0px 1rem #919191;	
+	box-shadow: 0px 0px 1rem #919191;
+	/* border-color: #1978d2; */
 }
 *::-webkit-scrollbar {
 	width: 10px;
@@ -75,22 +76,39 @@ header {
 	font-weight: 500;
 	margin: 10px 0px;
 }
-.to-do {
+.todo {
 	border-bottom: 1px solid #e3e3e3;
 }
-.to-do-point, .checked-point {
+.todo-point, .checked-point {
+	display: flex;
+	align-items: flex-start;
 	margin: 10px;
 }
-.to-do-point input, .checked-point input {
+.todo-point > div:nth-child(2), .checked-point > div:nth-child(2) {
+	/* flex-grow: 1; */
+	margin: 0px 5px;
+	/* width: 560px; */
+}
+.todo-point input, .checked-point input {
 	margin: 0px;
 }
-.to-do-point p, .checked-point p {
-	display: inline-block;
-	margin: 0px 5px;
-}
-.checked-point p {
+
+.checked-point div:nth-child(2) {
 	color: #919191;
 	text-decoration: line-through;
+}
+.remove-point {
+	font-size: 1.5rem;
+    line-height: 0.7;
+    background-color: greenyellow;
+    height: 25px;
+    width: 25px;
+    text-align: center;
+    border-radius: 50%;
+}
+.remove-point:hover {
+	background-color: #e3e3e3;
+	cursor: pointer;
 }
 .button {
 	box-sizing: content-box;
@@ -120,4 +138,28 @@ dialog {
 	width: 600px;
 	border: 1px solid #1978d2;
 	border-radius: 7px;
+}
+dialog .note-title {
+	margin-top: 0px;
+	font-size: 1.5rem;
+	font-weight: 400;
+}
+#dialog-Note-NewPoint {
+	margin: 5px 0px; 
+}
+.dialog-Note-NewPoint-Plus {
+	font-size: 1.75rem;
+	font-weight: 200;
+	float: left;
+	line-height: 1;
+}
+#dialog-Note-NewPoint-Text {
+	margin-left: 31px;
+	padding: 5px 0px;
+	border: 1px solid transparent;
+}
+#dialog-Note-NewPoint-Text:focus {
+	outline-width: 0px;
+	border-top: 1px solid #1978d2;
+	border-bottom: 1px solid #1978d2;
 }

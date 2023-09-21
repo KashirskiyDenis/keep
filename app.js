@@ -47,14 +47,14 @@ await readNotesFromGoogleKeep();
 let renderNote = (note) => {
 	let noteHTML =`<div id="${note.createdTimestampUsec}" class="note">`;
 	noteHTML += `<div class="note-title">${note.title}</div>`;
-	noteHTML += `<div class="to-do">`;
+	noteHTML += `<div class="todo">`;
 	for (let i = 0; i < note.todo.length; i++) {
-		noteHTML += `<div class="to-do-point"><input type="checkbox"><p>${note.todo[i].text}</p></div>`;
+		noteHTML += `<div class="todo-point"><div><input type="checkbox"></div><div>${note.todo[i].text}</div></div>`;
 	}
 	noteHTML += `</div>`;
 	noteHTML += `<div class="checked">`;
 	for (let i = 0; i < note.checked.length; i++) {
-		noteHTML += `<div class="checked-point"><input type="checkbox" checked><p>${note.checked[i].text}</p></div>`;
+		noteHTML += `<div class="checked-point"><div><input type="checkbox" checked></div><div>${note.checked[i].text}</div></div>`;
 	}
 	noteHTML += `</div>`;
 	noteHTML += `</div>`;
