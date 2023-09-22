@@ -44,6 +44,14 @@ function orderBy(note, field) {
 
 await readNotesFromGoogleKeep();
 
+let findNote = (id) => {
+	for (let i = 0; i < notes.length; i++) {
+		if (id == notes[i].createdTimestampUsec)
+			return notes[i];
+	}
+	return null;
+}
+
 let renderNote = (note) => {
 	let noteHTML =`<div id="${note.createdTimestampUsec}" class="note">`;
 	noteHTML += `<div class="note-title">${note.title}</div>`;
@@ -76,20 +84,36 @@ let requestListener = function (req, res) {
 			content = content.replace('input-notes-HTML', replaceText);
 			res.writeHead(200);
 			res.end(content);
-		});	
-		} else if (path == '/favicon') {
+		});
+	} else if (path.match(/api\/note\/[0-9]*/)) {
+		let method = req.method;
+		let id = +path.replace('/api/note/', '');
+
+		if (method == 'GET') {
+			let note = findNote(id);
+
+			if (!note) {
+				res.writeHead(404);
+				res.end('Not found');
+			} else {
+				res.setHeader('Content-Type', 'application/json');
+				res.writeHead(200);
+				res.end(JSON.stringify(note));
+			}
+		}
+	} else if (path == '/favicon') {
 		readFile('./public' + path + '.png')
 		.then(content => {
 			res.writeHead(200);
 			res.end(content);
 		});
-		} else if (path == '/style') {
+	} else if (path == '/style') {
 		readFile('./public' + path + '.css', { encoding: 'utf8' })
 		.then(content => {
 			res.writeHead(200);
 			res.end(content);
 		});	
-		} else if (path == '/script') {
+	} else if (path == '/script') {
 		readFile('./public' + path + '.js', { encoding: 'utf8' })
 		.then(content => {
 			res.writeHead(200);

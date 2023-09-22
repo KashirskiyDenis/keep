@@ -13,7 +13,7 @@
 	
 	<body>
 		<dialog id="dialog-Note">
-			<div id="dialog-NoteTitle" class="note-title">Note Title</div>
+			<div id="dialog-NoteTitle" class="note-title" contenteditable>Note Title</div>
 			<div id="dialog-Note-NewPoint">
 				<div class="dialog-Note-NewPoint-Plus">+</div>
 				<div id="dialog-Note-NewPoint-Text" contenteditable>Введите новый пункт</div>
@@ -23,15 +23,23 @@
 					<div>
 						<input type="checkbox">
 					</div>
-					<div>Пункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт списка</div>
-					<div class="remove-point">&#215;</div>
+					<div contenteditable>Пункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт спискаПункт списка</div>
+					<div>
+						<button class="remove-point">
+							&#215;
+						</button>
+					</div>
 				</div>
 				<div class="todo-point">
 					<div>
 						<input type="checkbox">
 					</div>
 					<div>Пункт списка</div>
-					<div class="remove-point">&#215;</div>
+					<div>
+						<button class="remove-point">
+							&#215;
+						</button>
+					</div>
 				</div>			
 			</div>
 			<div id="dialog-checked" class="checked">
@@ -40,19 +48,31 @@
 						<input type="checkbox">
 					</div>
 					<div>Пункт списка</div>
-					<div class="remove-point">&#215;</div>
+					<div>
+						<button class="remove-point">
+							&#215;
+						</button>
+					</div>
 				</div>
 				<div class="checked-point">
 					<div>
 						<input type="checkbox">
 					</div>
 					<div>Пункт списка</div>
-					<div class="remove-point">&#215;</div>
+					<div>
+						<button class="remove-point">
+							&#215;
+						</button>
+					</div>
 				</div>
 			</div>
 			<div class="dialog-NoteFotter">
-				<div>Цвет</div>
-				<div>Закрыть</div>
+				<div>
+					<button id="dialog-Note-Coloer">Цвет</button>
+				</div>
+				<div>
+					<button id="dialog-Note-Close">Закрыть</button>
+				</div>
 			</div>
 		</dialog>	
 		<div class="container">
@@ -62,10 +82,10 @@
 			<main id="notes" class="content">
 				input-notes-HTML
 			</main>
-			</div>
-			<footer>
-				<button id="add-keep" class="button button-circle button-circle-add">&#43;</button>
-			</footer>	
-		</body>
-		
-	</html>			
+		</div>
+		<footer>
+			<button id="add-note" class="button button-circle button-circle-add">&#43;</button>
+		</footer>	
+	</body>
+	
+</html>			

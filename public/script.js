@@ -1,7 +1,8 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function () {
-	let addKeep = document.getElementById('add-keep');
+	let addNoteButton = document.getElementById('add-note');
+	let noteDialog = document.getElementById('dialog-Note');
 	let notes = document.getElementById('notes').children;
 	
 	let ajax = (type, url, data) => {
@@ -31,12 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 		return promise;
 	};
-	
-	addKeep.addEventListener('click', () => {
-		currentDialog.showModal();
-		hiddenEntityAdd(currentMenu.id);
-		resetForm();
-	});
 	
 	let checkDragOverNote = (event) => {
 		let element = document.elementFromPoint(event.clientX, event.clientY);
@@ -142,12 +137,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		this.addEventListener('mouseleave', () => {
 			this.classList.remove('note-hover');
 		});
-		draggbleNote = null;
-		noteIndex = -1;
 		
 		if (!noteMoveFlag) {
-			console.log('click');
+			openNote(draggbleNote.id);
 		}
+		draggbleNote = null;
+		noteIndex = -1;
 		noteMoveFlag = false;
 	}
 	
@@ -162,10 +157,20 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 	
-	let openNote = () => {
-		
+	let openNote = (id) => {
+		ajax('GET', '/api/note/' + id, null).then(response => {
+			response = JSON.parse(response);
+			console.log(response);
+		}).catch(error => {
+			alert(error);
+		});			
 	};
 	
-	let noteDialog = document.getElementById('dialog-Note');
-	noteDialog.showModal();
+	addNoteButton.addEventListener('click', () => {
+		noteDialog.showModal();
+	});
+	
+	document.getElementById('dialog-Note-Close').addEventListener('click', () => {
+		noteDialog.close();
+	});
 });
