@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	let noteDialog = document.getElementById('dialog-Note');
 	let notes = document.getElementById('notes').children;
 	
+	noteDialog.addEventListener('click', (event) => {
+		if (event.target === noteDialog)
+			noteDialog.close();
+	});
+	
 	let ajax = (type, url, data) => {
 		let promise = new Promise(function (resolve, reject) {
 			let request = new XMLHttpRequest();
@@ -16,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			request.onload = function () {
 				if (this.status === 200) {
 					resolve(this.response);
-					} else if (this.status === 422) {
+				} else if (this.status === 422) {
 					reject(this.responseText);
-					} else {
+				} else {
 					let error = new Error(this.statusText);
 					error.code = this.status;
 					reject(error);
@@ -37,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		let element = document.elementFromPoint(event.clientX, event.clientY);
 		while (true) {
 			if (element.classList.contains('note'))
-			break;
+				break;
 			if (element.tagName == 'BODY')
-			return null;
+				return null;
 			element = element.parentNode;
 		}
 		return element
@@ -157,10 +162,39 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 	
+	let renderNoteDialog = (note) => {
+		// let dialogNoteTitle = document.getElementById('dialog-NoteTitle');
+		document.getElementById('dialog-NoteTitle').innerHTML = note.title;
+		
+		let dialogTodo = document.getElementById('dialog-todo');
+		let dialogChecked = document.getElementById('dialog-checked');
+		
+		
+		let dialogTodoHTML = '';
+		for (let i = 0; i < note.todo.length; i++) {
+			dialogTodoHTML += `<div class="todo-point"><div><input type="checkbox"></div>
+			<div>${note.todo[i].text}</div>
+			<div><button class="remove-point">&#215;</button></div>
+			</div>`;
+		}
+		dialogTodo.innerHTML = dialogTodoHTML;
+		
+		let dialogCheckedHTML = '';
+		for (let i = 0; i < note.checked.length; i++) {
+			dialogCheckedHTML += `<div class="checked-point"><div><input type="checkbox" checked></div>
+			<div>${note.checked[i].text}</div>
+			<div><button class="remove-point">&#215;</button></div>
+			</div>`;
+		}
+		dialogChecked.innerHTML = dialogCheckedHTML;
+		noteDialog.showModal();
+	}
+	
+	let note = null;
 	let openNote = (id) => {
 		ajax('GET', '/api/note/' + id, null).then(response => {
-			response = JSON.parse(response);
-			console.log(response);
+			note = JSON.parse(response);
+			renderNoteDialog(note);
 		}).catch(error => {
 			alert(error);
 		});			
@@ -170,7 +204,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		noteDialog.showModal();
 	});
 	
-	document.getElementById('dialog-Note-Close').addEventListener('click', () => {
+	document.getElementById('dialog-NoteClose').addEventListener('click', () => {
 		noteDialog.close();
 	});
+	
+	let dialogNoteTitle = document.getElementById('dialog-NoteTitle');
+	dialogNoteTitle.addEventListener('blur', () => {
+		console.log('blur');
+	});
+
 });

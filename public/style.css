@@ -5,12 +5,14 @@ html, body {
 	user-select: none;
 	height: 100%;
 }
-body::-webkit-scrollbar-track {
+*::-webkit-scrollbar {
+	width: 10px;
+}
+*::-webkit-scrollbar-track {
 	background-color: #e3e3e3;
 }
-body::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
 	background-color: #919191;
-	border-radius: 5px;
 }
 .container {
 	min-height: 100%;
@@ -58,16 +60,11 @@ header {
 	box-shadow: 0px 0px 1rem #919191;
 	/* border-color: #1978d2; */
 }
-*::-webkit-scrollbar {
-	width: 10px;
-}
 .note::-webkit-scrollbar-track {
-	background-color: #e3e3e3;
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
 }
 .note::-webkit-scrollbar-thumb {
-	background-color: #919191;
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
 }
@@ -154,27 +151,45 @@ dialog {
 	width: 600px;
 	border: 1px solid #1978d2;
 	border-radius: 7px;
+	max-height: 90%;
+	padding: 16px;
+	overflow-y: auto;
+	padding-bottom: 0px;
+}
+dialog::-webkit-scrollbar-track {
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+dialog::-webkit-scrollbar-thumb {
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
 }
 dialog .note-title {
 	margin-top: 0px;
 	font-size: 1.5rem;
 	font-weight: 400;
+	/* transform: translateY(-30px); */
+	position: relative;
+	top: 0px;
 }
-#dialog-Note-NewPoint {
+#dialog-NoteTitle-Placeholder {
+	font-size: 1.5rem;
+}
+#dialog-NewPoint {
 	margin: 5px 0px; 
 }
-.dialog-Note-NewPoint-Plus {
+.dialog-NewPoint-Plus {
 	font-size: 1.75rem;
 	font-weight: 200;
 	float: left;
 	line-height: 1;
 }
-#dialog-Note-NewPoint-Text {
+#dialog-NewPoint-Text {
 	margin-left: 31px;
 	padding: 5px 0px;
 	border: 1px solid transparent;
 }
-#dialog-Note-NewPoint-Text:focus {
+#dialog-NewPoint-Text:focus {
 	outline-width: 0px;
 	border-top: 1px solid #1978d2;
 	border-bottom: 1px solid #1978d2;
@@ -182,4 +197,8 @@ dialog .note-title {
 .dialog-NoteFotter {
 	display: flex;
 	justify-content: space-between;
+	background-color: #ffffff;
+	position: sticky;
+	bottom: 0px;
+	padding: 1rem 0rem;
 }
