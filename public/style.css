@@ -164,16 +164,16 @@ dialog::-webkit-scrollbar-thumb {
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
 }
-dialog .note-title {
+#dialog-NoteTitle-Placeholder {
+	color: #ababab;
+	font-size: 1.5rem;
+	position: absolute;
+}
+#dialog-NoteTitle {
 	margin-top: 0px;
 	font-size: 1.5rem;
 	font-weight: 400;
-	/* transform: translateY(-30px); */
 	position: relative;
-	top: 0px;
-}
-#dialog-NoteTitle-Placeholder {
-	font-size: 1.5rem;
 }
 #dialog-NewPoint {
 	margin: 5px 0px; 
@@ -184,7 +184,14 @@ dialog .note-title {
 	float: left;
 	line-height: 1;
 }
+#dialog-NewPoint-Text-Placeholder {
+	color: #ababab;
+	margin-left: 31px;
+	padding: 5px 0px;
+	position: absolute;
+}
 #dialog-NewPoint-Text {
+	position: relative;
 	margin-left: 31px;
 	padding: 5px 0px;
 	border: 1px solid transparent;

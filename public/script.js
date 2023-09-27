@@ -5,9 +5,40 @@ document.addEventListener('DOMContentLoaded', function () {
 	let noteDialog = document.getElementById('dialog-Note');
 	let notes = document.getElementById('notes').children;
 	
-	noteDialog.addEventListener('click', (event) => {
-		if (event.target === noteDialog)
-			noteDialog.close();
+	let clearNoteDialog = () => {
+		document.getElementById('dialog-NoteTitle-Placeholder').style.opacity = 1;
+		document.getElementById('dialog-NewPoint-Text-Placeholder').style.opacity = 1;
+		document.getElementById('dialog-NoteTitle').innerHTML = '';
+		document.getElementById('dialog-NewPoint-Text').innerHTML = '';
+		document.getElementById('dialog-todo').innerHTML = '';
+		document.getElementById('dialog-checked').innerHTML = '';
+	}
+	
+	document.getElementById('dialog-NoteClose').addEventListener('click', () => {
+		noteDialog.close();
+		clearNoteDialog();
+	});
+	
+	let closeNoteDialog = (event) => {
+		if (event.target === noteDialog) {
+			if (event.layerX < 0 || event.layerX > event.currentTarget.offsetWidth) {
+				clearNoteDialog();
+				noteDialog.close();
+				note = null;
+				return;
+			}
+			if (event.layerY < 0 || event.layerY > event.currentTarget.offsetHeight) {
+				clearNoteDialog();
+				noteDialog.close();
+				note = null;
+			}
+		}
+	}
+	
+	noteDialog.addEventListener('click', closeNoteDialog);
+	noteDialog.addEventListener('cancel', (event) => {
+		clearNoteDialog();
+		note = null;
 	});
 	
 	let ajax = (type, url, data) => {
@@ -54,8 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	let shiftX = null;
 	let shiftY = null;
 	let noteIndex = -1;
-	let timeDown = 0;
-	let timesUp = 0;
 	let noteMoveFlag = false;
 	
 	let mouseDownNote = (event) => {		
@@ -114,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (noteOver == notes[i]) {
 					if (i > noteIndex) {
 						notes[i].insertAdjacentElement('afterend', hole);
-						} else {
+					} else {
 						notes[i].insertAdjacentElement('beforebegin', hole);
 					}
 					noteIndex = i;
@@ -166,9 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		// let dialogNoteTitle = document.getElementById('dialog-NoteTitle');
 		document.getElementById('dialog-NoteTitle').innerHTML = note.title;
 		
+		if (note.title.length != 0) {
+			document.getElementById('dialog-NoteTitle-Placeholder').style.opacity = 0;
+		} else {
+			document.getElementById('dialog-NoteTitle-Placeholder').style.opacity = 1;
+		}
+		
 		let dialogTodo = document.getElementById('dialog-todo');
 		let dialogChecked = document.getElementById('dialog-checked');
-		
 		
 		let dialogTodoHTML = '';
 		for (let i = 0; i < note.todo.length; i++) {
@@ -187,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			</div>`;
 		}
 		dialogChecked.innerHTML = dialogCheckedHTML;
+		
 		noteDialog.showModal();
 	}
 	
@@ -194,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	let openNote = (id) => {
 		ajax('GET', '/api/note/' + id, null).then(response => {
 			note = JSON.parse(response);
+			console.log(note);
 			renderNoteDialog(note);
 		}).catch(error => {
 			alert(error);
@@ -202,15 +238,67 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	addNoteButton.addEventListener('click', () => {
 		noteDialog.showModal();
+		newNote();
 	});
 	
-	document.getElementById('dialog-NoteClose').addEventListener('click', () => {
-		noteDialog.close();
-	});
+	function showHidePlaceholder() {
+		if (this.innerText.length == 0)
+			document.getElementById(this.id + '-Placeholder').style.opacity = 1;
+		else
+			document.getElementById(this.id + '-Placeholder').style.opacity = 0;
+	}
 	
 	let dialogNoteTitle = document.getElementById('dialog-NoteTitle');
-	dialogNoteTitle.addEventListener('blur', () => {
-		console.log('blur');
-	});
+	let dialogNewPointText = document.getElementById('dialog-NewPoint-Text');
+	
+	dialogNoteTitle.addEventListener('input', showHidePlaceholder);
+	dialogNewPointText.addEventListener('input', showHidePlaceholder);
+	
+	dialogNoteTitle.addEventListener('paste', () => {
 
-});
+	});
+	
+	dialogNoteTitle.addEventListener('blur', () => {
+		if (dialogNoteTitle.innerText.length != 0) {
+			note.title = dialogNoteTitle.innerText;
+		}
+	});
+	
+	dialogNoteTitle.addEventListener('keypress', (event) => {
+		if (event.key == 'Enter') {
+			event.preventDefault();
+			dialogNewPointText.focus();
+		}
+	});
+	
+	let addNewTodoPointHTML = (point) => {
+		return `<div class="todo-point"><div><input type="checkbox"></div>
+			<div>${point}</div>
+			<div><button class="remove-point">&#215;</button></div>
+			</div>`;
+	}
+	
+	dialogNewPointText.addEventListener('keypress', (event) => {
+		if (event.key == 'Enter') {
+			event.preventDefault();
+			
+			let point = dialogNewPointText.innerText;
+			let newTodoPoint = addNewTodoPointHTML(point);
+			
+			note.listContent.push({ isCheked : false, test : point });
+			document.getElementById('dialog-todo').innerHTML = newTodoPoint + document.getElementById('dialog-todo').innerHTML;
+			dialogNewPointText.innerText = '';
+			document.getElementById('dialog-NewPoint-Text-Placeholder').style.opacity = 1;
+		}
+	});
+	
+	let newNote = () => {
+		note = {};
+		note.checked = [];
+		note.color = 'DEFAULT';
+		note.createdTimestampUsec = +(new Date()) * 1000;
+		note.listContent = [];
+		note.title = '';
+		note.todo = [];
+	}
+});		
