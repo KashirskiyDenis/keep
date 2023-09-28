@@ -147,6 +147,9 @@ header {
 	bottom: 1.5rem;
 	right: 1.5rem;
 }
+.button-circle-add:focus {
+	outline-width: 0px;
+}
 dialog {
 	width: 600px;
 	border: 1px solid #1978d2;

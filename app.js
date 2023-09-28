@@ -1,45 +1,55 @@
 'use strict';
 
 import { createServer } from 'node:http';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, appendFile} from 'node:fs/promises';
 import { parse } from 'node:url';
 import { config } from './config/index.js';
 
 let notes = [];
 
-async function readNotesFromGoogleKeep() {
-	try {
-		let noteNames = await readdir('./notes');
-		if (noteNames.length != 0) {
-			for (let i = 0; i < noteNames.length; i++) {
-				let rawNote = await readFile(`./notes/${noteNames[i]}`);
-				let note = JSON.parse(rawNote);
-				note.listContent = orderBy(note.listContent, 'text');
-				note.todo = [];
-				note.checked = [];
-				for (let j = 0; j < note.listContent.length; j++) {
-					if (note.listContent[j].isChecked)
-						note.checked.push(note.listContent[j]);
-					else
-						note.todo.push(note.listContent[j]);
-				}
-				notes.push(note);
-			}
-		}
-	} catch (error) {
-		console.log(error.message);
-	}
-}
-
-function orderBy(note, field) {
+let orderBy = (note, field) => {
 	let compareString = (a, b) => a[field].localeCompare(b[field]);
 	
 	if (note.length <= 1)
 		return note;
+		
+	return note.sort(compareString);
+}
+
+let formateNote = (rawNote) => {
+	let note = JSON.parse(rawNote);
 	
-	note.sort(compareString);
+	note.todo = [];
+	note.checked = [];
 	
+	if (note.listContent.length == 0)
+		return note;
+	
+	note.listContent = orderBy(note.listContent, 'text');
+	for (let i = 0; i < note.listContent.length; i++) {
+		if (note.listContent[i].isChecked)
+			note.checked.push(note.listContent[i]);
+		else
+			note.todo.push(note.listContent[i]);
+	}
 	return note;
+}
+
+async function readNotesFromGoogleKeep() {
+	let noteNames = await readdir('./notes');
+	if (noteNames.length != 0) {
+		for (let i = 0; i < noteNames.length; i++) {
+			try {
+				let rawNote = await readFile(`./notes/${noteNames[i]}`);
+				if (rawNote.length == 0)
+					continue;
+				let note = formateNote(rawNote);
+				notes.push(note);
+			} catch (error) {
+				console.log(error.message);
+			}
+		}
+	}
 }
 
 await readNotesFromGoogleKeep();
@@ -47,9 +57,15 @@ await readNotesFromGoogleKeep();
 let findNote = (id) => {
 	for (let i = 0; i < notes.length; i++) {
 		if (id == notes[i].createdTimestampUsec)
-			return notes[i];
+		return notes[i];
 	}
 	return null;
+}
+
+let createNote = (note) => {
+	let noteObject = JSON.parse(note);
+	noteObject.createdTimestampUsec = +(new Date()) * 1000;
+	return appendFile(`./notes/${noteObject.createdTimestampUsec}.json`, note);
 }
 
 let renderNote = (note) => {
@@ -85,13 +101,13 @@ let requestListener = function (req, res) {
 			res.writeHead(200);
 			res.end(content);
 		});
-	} else if (path.match(/api\/note\/[0-9]*/)) {
+	} else if (path.match(/\/api\/note\/[0-9]*/)) {
 		let method = req.method;
 		let id = +path.replace('/api/note/', '');
-
+		
 		if (method == 'GET') {
 			let note = findNote(id);
-
+			
 			if (!note) {
 				res.writeHead(404);
 				res.end('Not found');
@@ -100,6 +116,31 @@ let requestListener = function (req, res) {
 				res.writeHead(200);
 				res.end(JSON.stringify(note));
 			}
+		}
+	} else if (path.match(/\/api\/note/)) {	
+		let method = req.method;
+		if (method == 'PUT') {
+			let bodyReq = '';
+			
+			req.on('data', (chankData) => {
+				bodyReq += chankData;
+			});
+			req.on('end', () => {
+				try {
+					createNote(bodyReq)
+					.then(content => {
+						let note = formateNote(bodyReq);
+						notes.push(note);
+						let noteHTML = renderNote(note);
+						res.setHeader('Content-Type', 'text/html');
+						res.writeHead(200);
+						res.end(noteHTML);
+					});				
+				} catch (error) {
+					res.writeHead(500);
+					res.end(error.message);
+				}
+			});
 		}
 	} else if (path == '/favicon') {
 		readFile('./public' + path + '.png')

@@ -12,22 +12,33 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('dialog-NewPoint-Text').innerHTML = '';
 		document.getElementById('dialog-todo').innerHTML = '';
 		document.getElementById('dialog-checked').innerHTML = '';
+		flagCloseNoteDialog = false;
 	}
 	
 	document.getElementById('dialog-NoteClose').addEventListener('click', () => {
+		saveNewNote();	
+		noteDialog.close();
+		clearNoteDialog();
+	});	
+	
+	document.getElementById('dialog-NoteRemove').addEventListener('click', () => {
 		noteDialog.close();
 		clearNoteDialog();
 	});
 	
+	let flagCloseNoteDialog = false;
+	
 	let closeNoteDialog = (event) => {
-		if (event.target === noteDialog) {
+		if (event.target === noteDialog && flagCloseNoteDialog) {
 			if (event.layerX < 0 || event.layerX > event.currentTarget.offsetWidth) {
+				saveNewNote();
 				clearNoteDialog();
 				noteDialog.close();
 				note = null;
 				return;
 			}
 			if (event.layerY < 0 || event.layerY > event.currentTarget.offsetHeight) {
+				saveNewNote();
 				clearNoteDialog();
 				noteDialog.close();
 				note = null;
@@ -35,9 +46,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 	
+	noteDialog.addEventListener('mousedown', (event) => {
+		if (event.layerX < 0 || event.layerX > event.currentTarget.offsetWidth) {
+			flagCloseNoteDialog = true;
+		}
+		if (event.layerY < 0 || event.layerY > event.currentTarget.offsetHeight) {
+			flagCloseNoteDialog = true;
+		}
+	});
+	
 	noteDialog.addEventListener('click', closeNoteDialog);
 	noteDialog.addEventListener('cancel', (event) => {
 		clearNoteDialog();
+		saveNewNote();
 		note = null;
 	});
 	
@@ -67,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 		
 		return promise;
-	};
+	}
 	
 	let checkDragOverNote = (event) => {
 		let element = document.elementFromPoint(event.clientX, event.clientY);
@@ -79,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			element = element.parentNode;
 		}
 		return element
-	};
+	}
 	
 	let draggbleNote = null;
 	let shiftX = null;
@@ -97,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 		let hole = document.createElement('div');
 		draggbleNote = event.currentTarget;
-		// draggbleNote = event.currentTarget.cloneNode(true);
 		shiftX = event.clientX - draggbleNote.getBoundingClientRect().left + 10;
 		shiftY = event.clientY - draggbleNote.getBoundingClientRect().top + 10;
 		
@@ -119,16 +139,16 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.addEventListener('mousemove', newPositionNote);
 		document.addEventListener('mousemove', overNote);
 		draggbleNote.addEventListener('mouseup', mouseUpNote);
-	};
+	}
 	
 	let noteMove = () => {
 		noteMoveFlag = true;
-	};
+	}
 	
 	let newPositionNote = (event) => {
 		draggbleNote.style.left = event.pageX - shiftX + 'px';
 		draggbleNote.style.top = event.pageY - shiftY + 'px';
-	};
+	}
 	
 	let overNote = (event) => {
 		let hole = document.getElementById('hole');
@@ -151,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 		}
-	};
+	}
 	
 	function mouseUpNote() {
 		draggbleNote.removeAttribute('style');
@@ -192,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	
 	let renderNoteDialog = (note) => {
-		// let dialogNoteTitle = document.getElementById('dialog-NoteTitle');
 		document.getElementById('dialog-NoteTitle').innerHTML = note.title;
 		
 		if (note.title.length != 0) {
@@ -221,6 +240,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			</div>`;
 		}
 		dialogChecked.innerHTML = dialogCheckedHTML;
+	
+		let removeNotePointButton = document.querySelectorAll('.remove-point');
+		for (let i = 0; i < removeNotePointButton.length; i++) {
+			removeNotePointButton[i].addEventListener('click', removeNotePoint);
+		}
 		
 		noteDialog.showModal();
 	}
@@ -229,12 +253,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	let openNote = (id) => {
 		ajax('GET', '/api/note/' + id, null).then(response => {
 			note = JSON.parse(response);
-			console.log(note);
 			renderNoteDialog(note);
 		}).catch(error => {
 			alert(error);
-		});			
-	};
+		});
+	}
 	
 	addNoteButton.addEventListener('click', () => {
 		noteDialog.showModal();
@@ -254,8 +277,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	dialogNoteTitle.addEventListener('input', showHidePlaceholder);
 	dialogNewPointText.addEventListener('input', showHidePlaceholder);
 	
-	dialogNoteTitle.addEventListener('paste', () => {
-
+	dialogNoteTitle.addEventListener('paste', (event) => {
+		event.preventDefault();
+		let pasteText = event.clipboardData.getData('text');
+		let indexPaste = window.getSelection().baseOffset;
+		let innerText = dialogNoteTitle.innerText;
+		dialogNoteTitle.innerText = innerText.substring(0, indexPaste) + pasteText + innerText.substring(indexPaste);
 	});
 	
 	dialogNoteTitle.addEventListener('blur', () => {
@@ -283,10 +310,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			event.preventDefault();
 			
 			let point = dialogNewPointText.innerText;
-			let newTodoPoint = addNewTodoPointHTML(point);
+			let newPoint = addNewTodoPointHTML(point);
 			
-			note.listContent.push({ isCheked : false, test : point });
-			document.getElementById('dialog-todo').innerHTML = newTodoPoint + document.getElementById('dialog-todo').innerHTML;
+			note.listContent.push({ isCheked : false, text : point });
+			let newPointNode = new DOMParser().parseFromString(newPoint, 'text/html').body.childNodes[0];
+			newPointNode.addEventListener('click', removeNotePoint);
+			
+			document.getElementById('dialog-todo').appendChild(newPointNode);
+			
 			dialogNewPointText.innerText = '';
 			document.getElementById('dialog-NewPoint-Text-Placeholder').style.opacity = 1;
 		}
@@ -294,11 +325,50 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	let newNote = () => {
 		note = {};
-		note.checked = [];
 		note.color = 'DEFAULT';
-		note.createdTimestampUsec = +(new Date()) * 1000;
 		note.listContent = [];
 		note.title = '';
-		note.todo = [];
+	}
+	
+	let saveNewNote = () => {
+		ajax('PUT', '/api/note', JSON.stringify(note))
+		.then(response => {
+			let note = new DOMParser().parseFromString(response, 'text/html').body.childNodes[0];
+			note.addEventListener('mouseenter', () => {
+				note.classList.add('note-hover');
+			});
+			note.addEventListener('mousedown', mouseDownNote);
+			note.addEventListener('mouseleave', () => {
+				note.classList.remove('note-hover');
+			});
+			document.getElementById('notes').insertBefore(note, notes[0]);
+			notes = document.getElementById('notes').children;
+		}).catch(error => {
+			alert(error);
+		});
+	}
+	
+	let updateNote = () => {
+		ajax('POST', '/api/note/' + note.createdTimestampUsec, JSON.stringify(note))
+		.then(response => {
+			let note = new DOMParser().parseFromString(response, 'text/html').body.childNodes[0];
+			
+		}).catch(error => {
+			alert(error);
+		});		
+	}
+	
+	let removeNotePoint = (event) => {
+		let notePoint = event.currentTarget.parentNode.parentNode;
+		let isCheked = notePoint.querySelector('input').checked;
+		let textPoint = notePoint.children[1].firstChild.textContent;
+		
+		notePoint.remove();
+		for (let i = 0; i < note.listContent.length; i++) {
+			if (note.listContent[i].text == textPoint)
+				note.listContent.splice(i, 1);
+				break;
+		}
+
 	}
 });		
