@@ -1,7 +1,7 @@
 'use strict';
 
 import { createServer } from 'node:http';
-import { readFile, readdir, appendFile} from 'node:fs/promises';
+import { appendFile, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { parse } from 'node:url';
 import { config } from './config/index.js';
 
@@ -62,10 +62,12 @@ let findNote = (id) => {
 	return null;
 }
 
-let createNote = (note) => {
-	let noteObject = JSON.parse(note);
-	noteObject.createdTimestampUsec = +(new Date()) * 1000;
-	return appendFile(`./notes/${noteObject.createdTimestampUsec}.json`, note);
+let createNote = async (rawNote) => {
+	let note = formateNote(rawNote);
+	note.createdTimestampUsec = +(new Date()) * 1000;
+	await appendFile(`./notes/${note.createdTimestampUsec}.json`, rawNote);
+	notes.push(note);
+	return note;
 }
 
 let renderNote = (note) => {
@@ -86,7 +88,30 @@ let renderNote = (note) => {
 	return noteHTML;
 }
 
-let requestListener = function (req, res) {
+let updateNote = async (note) => {
+	let noteID = JSON.parse(note).createdTimestampUsec;
+	for (let i = 0; i < notes.length; i++) {
+		if (noteID == notes[i].createdTimestampUsec) {
+			await writeFile(`./notes/${noteID}.json`, note);
+			note = formateNote(note);
+			notes[i] = note;
+			return note;
+		}
+	}
+}
+
+let removeNote = async (id) => {
+	for (let i = 0; i < notes.length; i++) {
+		if (id == notes[i].createdTimestampUsec) {
+			notes.splice(i, 1);
+			await rm(`./notes/${id}.json`);
+			return true;
+		}
+	}
+	return false;
+}
+
+function requestListener(req, res) {
 	let path = parse(req.url).pathname;
 	
 	if (path == '' || path == '/') {
@@ -116,6 +141,17 @@ let requestListener = function (req, res) {
 				res.writeHead(200);
 				res.end(JSON.stringify(note));
 			}
+		} else if (method == 'DELETE') {
+			removeNote(id)
+			.then(result => {
+				if (result) {
+					res.writeHead(200);
+					res.end('Note was removed');
+				} else {
+					res.writeHead(404);
+					res.end('Note not Found');
+				}
+			});
 		}
 	} else if (path.match(/\/api\/note/)) {	
 		let method = req.method;
@@ -128,9 +164,7 @@ let requestListener = function (req, res) {
 			req.on('end', () => {
 				try {
 					createNote(bodyReq)
-					.then(content => {
-						let note = formateNote(bodyReq);
-						notes.push(note);
+					.then(note => {
 						let noteHTML = renderNote(note);
 						res.setHeader('Content-Type', 'text/html');
 						res.writeHead(200);
@@ -140,6 +174,20 @@ let requestListener = function (req, res) {
 					res.writeHead(500);
 					res.end(error.message);
 				}
+			});
+		} else if (method == 'POST') {
+			let bodyReq = '';
+			req.on('data', (chankData) => {
+				bodyReq += chankData;
+			});
+			req.on('end', () => {
+				updateNote(bodyReq)
+				.then(note => {
+					let noteHTML = renderNote(note);
+					res.setHeader('Content-Type', 'text/html');
+					res.writeHead(200);
+					res.end(noteHTML);
+				});
 			});
 		}
 	} else if (path == '/favicon') {

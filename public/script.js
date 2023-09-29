@@ -12,11 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('dialog-NewPoint-Text').innerHTML = '';
 		document.getElementById('dialog-todo').innerHTML = '';
 		document.getElementById('dialog-checked').innerHTML = '';
+		document.body.style.overflowY = 'auto';
 		flagCloseNoteDialog = false;
 	}
 	
 	document.getElementById('dialog-NoteClose').addEventListener('click', () => {
-		saveNewNote();	
+		choiceSaveOrUpdateOrNothing();	
 		noteDialog.close();
 		clearNoteDialog();
 	});	
@@ -24,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('dialog-NoteRemove').addEventListener('click', () => {
 		noteDialog.close();
 		clearNoteDialog();
+		if (note.createdTimestampUsec) {
+			removeNote();
+		}
 	});
 	
 	let flagCloseNoteDialog = false;
@@ -31,14 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	let closeNoteDialog = (event) => {
 		if (event.target === noteDialog && flagCloseNoteDialog) {
 			if (event.layerX < 0 || event.layerX > event.currentTarget.offsetWidth) {
-				saveNewNote();
+				choiceSaveOrUpdateOrNothing();
 				clearNoteDialog();
 				noteDialog.close();
 				note = null;
 				return;
 			}
 			if (event.layerY < 0 || event.layerY > event.currentTarget.offsetHeight) {
-				saveNewNote();
+				choiceSaveOrUpdateOrNothing();
 				clearNoteDialog();
 				noteDialog.close();
 				note = null;
@@ -58,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	noteDialog.addEventListener('click', closeNoteDialog);
 	noteDialog.addEventListener('cancel', (event) => {
 		clearNoteDialog();
-		saveNewNote();
+		choiceSaveOrUpdateOrNothing();
 		note = null;
 	});
 	
@@ -200,15 +204,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		noteMoveFlag = false;
 	}
 	
+	let addEventListenerToNote = (note) => {
+		note.addEventListener('mouseenter', () => {
+			note.classList.add('note-hover');
+		});
+		note.addEventListener('mousedown', mouseDownNote);
+		note.addEventListener('mouseleave', () => {
+			note.classList.remove('note-hover');
+		});		
+	}
+	
 	let noteList = document.querySelectorAll('.note');
 	for (let i = 0; i < noteList.length; i++) {
-		noteList[i].addEventListener('mouseenter', () => {
-			noteList[i].classList.add('note-hover');
-		});
-		noteList[i].addEventListener('mousedown', mouseDownNote);
-		noteList[i].addEventListener('mouseleave', () => {
-			noteList[i].classList.remove('note-hover');
-		});
+		addEventListenerToNote(notes[i]);
 	}
 	
 	let renderNoteDialog = (note) => {
@@ -246,7 +254,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			removeNotePointButton[i].addEventListener('click', removeNotePoint);
 		}
 		
+		let chechPointInputs = document.querySelectorAll('input');
+		for (let i = 0; i < chechPointInputs.length; i++) {
+			chechPointInputs[i].addEventListener('click', checkUncheckPoint);
+		}
+		
 		noteDialog.showModal();
+		document.body.style.overflowY = 'hidden';
 	}
 	
 	let note = null;
@@ -261,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	addNoteButton.addEventListener('click', () => {
 		noteDialog.showModal();
+		document.body.style.overflowY = 'hidden';
 		newNote();
 	});
 	
@@ -312,12 +327,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			let point = dialogNewPointText.innerText;
 			let newPoint = addNewTodoPointHTML(point);
 			
-			note.listContent.push({ isCheked : false, text : point });
+			note.listContent.push({ isChecked : false, text : point });
 			let newPointNode = new DOMParser().parseFromString(newPoint, 'text/html').body.childNodes[0];
-			newPointNode.addEventListener('click', removeNotePoint);
-			
+			newPointNode.querySelector('.remove-point').addEventListener('click', removeNotePoint);
+			newPointNode.querySelector('input').addEventListener('click', checkUncheckPoint);
 			document.getElementById('dialog-todo').appendChild(newPointNode);
-			
 			dialogNewPointText.innerText = '';
 			document.getElementById('dialog-NewPoint-Text-Placeholder').style.opacity = 1;
 		}
@@ -330,17 +344,20 @@ document.addEventListener('DOMContentLoaded', function () {
 		note.title = '';
 	}
 	
+	let choiceSaveOrUpdateOrNothing = () => {
+		if ((note.title.length + note.listContent.length) == 0)
+			return;
+		if (note.createdTimestampUsec)
+			updateNote();
+		else
+			saveNewNote();
+	}
+	
 	let saveNewNote = () => {
 		ajax('PUT', '/api/note', JSON.stringify(note))
 		.then(response => {
 			let note = new DOMParser().parseFromString(response, 'text/html').body.childNodes[0];
-			note.addEventListener('mouseenter', () => {
-				note.classList.add('note-hover');
-			});
-			note.addEventListener('mousedown', mouseDownNote);
-			note.addEventListener('mouseleave', () => {
-				note.classList.remove('note-hover');
-			});
+			addEventListenerToNote(note);
 			document.getElementById('notes').insertBefore(note, notes[0]);
 			notes = document.getElementById('notes').children;
 		}).catch(error => {
@@ -349,26 +366,75 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	
 	let updateNote = () => {
-		ajax('POST', '/api/note/' + note.createdTimestampUsec, JSON.stringify(note))
+		ajax('POST', '/api/note', JSON.stringify(note))
 		.then(response => {
 			let note = new DOMParser().parseFromString(response, 'text/html').body.childNodes[0];
-			
+			for (let i = 0; i < notes.length; i++) {
+				if (note.id == notes[i].id) {
+					addEventListenerToNote(note);
+					notes[i].parentNode.replaceChild(note, notes[i]);
+					break;
+				}
+			}
 		}).catch(error => {
 			alert(error);
 		});		
 	}
 	
+	let removeNote = () => {
+		ajax('DELETE', '/api/note/' + note.createdTimestampUsec, null)
+		.then(response => {
+			for (let i = 0; i < notes.length; i++) {
+				if (note.createdTimestampUsec == notes[i].id) {
+					notes[i].remove();
+					note = null;
+					break;
+				}
+			}
+		}).catch(error => {
+			alert(error);
+		});
+	}
+	
+	let checkUncheckPoint = (event) => {
+		let notePoint = event.currentTarget.parentNode.parentNode;
+		let isChecked = event.currentTarget.checked;
+		let textPoint = notePoint.children[1].firstChild.textContent;
+		
+		for (let i = 0; i < note.listContent.length; i++) {
+			if (note.listContent[i].text == textPoint) {
+				note.listContent[i].isChecked = isChecked;
+				moveCheckUncheckPoint(notePoint, isChecked);
+				break;
+			}
+		}
+	}
+	
+	let moveCheckUncheckPoint = (point, isChecked) => {
+		let todoList = document.getElementById('dialog-todo');
+		let checkedList = document.getElementById('dialog-checked');
+		if (isChecked) {
+			point.classList.remove('todo-point');
+			point.classList.add('checked-point');
+			checkedList.appendChild(point);
+		} else {
+			point.classList.add('todo-point');
+			point.classList.remove('checked-point');
+			todoList.appendChild(point);
+		}
+	}
+	
 	let removeNotePoint = (event) => {
 		let notePoint = event.currentTarget.parentNode.parentNode;
-		let isCheked = notePoint.querySelector('input').checked;
+		let isChecked = notePoint.querySelector('input').checked;
 		let textPoint = notePoint.children[1].firstChild.textContent;
 		
 		notePoint.remove();
 		for (let i = 0; i < note.listContent.length; i++) {
-			if (note.listContent[i].text == textPoint)
+			if (note.listContent[i].text == textPoint) {
 				note.listContent.splice(i, 1);
 				break;
+			}
 		}
-
 	}
 });		
