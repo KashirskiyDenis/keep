@@ -80,10 +80,14 @@ header {
 }
 .todo {
 	border-bottom: 1px solid #e3e3e3;
+	padding-bottom: 5px;
+}
+.checked {
+	padding-top: 5px;
 }
 .todo-point, .checked-point {
 	display: flex;
-	align-items: flex-start;
+	align-items: baseline;
 	margin: 5px 10px;
 }
 .todo-point > div:nth-child(2), .checked-point > div:nth-child(2) {
@@ -91,6 +95,13 @@ header {
 	border-bottom: 1px solid transparent;	
 	margin: 0px 0.5rem;
 	flex-grow: 1;
+}
+dialog .todo-point, dialog .checked-point {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+dialog .todo-point > div:nth-child(2), dialog .checked-point > div:nth-child(2) {
+	padding: 3px 0px;
 }
 .todo-point > div:nth-child(2):focus, .checked-point > div:nth-child(2):focus {
 	outline-width: 0px;
@@ -154,7 +165,7 @@ dialog {
 	width: 600px;
 	border: 1px solid #1978d2;
 	border-radius: 7px;
-	max-height: 90%;
+	max-height: calc(100% - 150px);
 	padding: 16px;
 	overflow-y: auto;
 	padding-bottom: 0px;
@@ -211,4 +222,7 @@ dialog::-webkit-scrollbar-thumb {
 	position: sticky;
 	bottom: 0px;
 	padding: 1rem 0rem;
+}
+#dialog-NoteRemove {
+
 }

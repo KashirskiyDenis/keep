@@ -195,9 +195,15 @@ function requestListener(req, res) {
 		.then(content => {
 			res.writeHead(200);
 			res.end(content);
+		});	
+	} else if (path == '/trash') {
+		readFile('./public' + path + '.png')
+		.then(content => {
+			res.writeHead(200);
+			res.end(content);
 		});
 	} else if (path == '/style') {
-		readFile('./public' + path + '.css', { encoding: 'utf8' })
+		readFile('./public' + path + '.css')
 		.then(content => {
 			res.writeHead(200);
 			res.end(content);

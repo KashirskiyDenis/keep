@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		let dialogTodoHTML = '';
 		for (let i = 0; i < note.todo.length; i++) {
 			dialogTodoHTML += `<div class="todo-point"><div><input type="checkbox"></div>
-			<div>${note.todo[i].text}</div>
+			<div contenteditable>${note.todo[i].text}</div>
 			<div><button class="remove-point">&#215;</button></div>
 			</div>`;
 		}
@@ -243,20 +243,32 @@ document.addEventListener('DOMContentLoaded', function () {
 		let dialogCheckedHTML = '';
 		for (let i = 0; i < note.checked.length; i++) {
 			dialogCheckedHTML += `<div class="checked-point"><div><input type="checkbox" checked></div>
-			<div>${note.checked[i].text}</div>
+			<div contenteditable>${note.checked[i].text}</div>
 			<div><button class="remove-point">&#215;</button></div>
 			</div>`;
 		}
 		dialogChecked.innerHTML = dialogCheckedHTML;
 	
-		let removeNotePointButton = document.querySelectorAll('.remove-point');
-		for (let i = 0; i < removeNotePointButton.length; i++) {
-			removeNotePointButton[i].addEventListener('click', removeNotePoint);
+		let dialog = document.querySelector('dialog');
+		
+		let checkPointInputs = dialog.querySelectorAll('input');
+		for (let i = 0; i < checkPointInputs.length; i++) {
+			checkPointInputs[i].addEventListener('click', checkUncheckPoint);
 		}
 		
-		let chechPointInputs = document.querySelectorAll('input');
-		for (let i = 0; i < chechPointInputs.length; i++) {
-			chechPointInputs[i].addEventListener('click', checkUncheckPoint);
+		let textPointsTodo = dialog.querySelectorAll('.todo-point');
+		let textPointsChecked = dialog.querySelectorAll('.checked-point');
+		
+		for (let i = 0; i < textPointsTodo.length; i++) {
+			textPointsTodo[i].addEventListener('keypress', pressEnterToNotePoint);
+		}		
+		for (let i = 0; i < textPointsChecked.length; i++) {
+			textPointsChecked[i].addEventListener('keypress', pressEnterToNotePoint);
+		}
+		
+		let removeNotePointButton = dialog.querySelectorAll('.remove-point');
+		for (let i = 0; i < removeNotePointButton.length; i++) {
+			removeNotePointButton[i].addEventListener('click', removeNotePoint);
 		}
 		
 		noteDialog.showModal();
@@ -313,11 +325,29 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	
-	let addNewTodoPointHTML = (point) => {
-		return `<div class="todo-point"><div><input type="checkbox"></div>
-			<div>${point}</div>
+	let addNewTodoPointHTML = (point, checked) => {
+		let html = `<div class="todo-point"><div><input type="checkbox"></div>
+			<div contenteditable>${point}</div>
 			<div><button class="remove-point">&#215;</button></div>
-			</div>`;
+			</div>`
+		if (checked)
+			html = convertTodoPointToChecked(html);
+		return html;
+	}
+	
+	let convertTodoPointToChecked = (html) => {
+		html = html.replace('todo-point', 'checked-point');
+		html = html.replace('<input type="checkbox">', '<input type="checkbox" checked>');
+		
+		return html;
+	}
+	
+	let convertHTMLPointToDOMNode = (html) => {
+		let DOMNode = new DOMParser().parseFromString(html, 'text/html').body.childNodes[0];
+		DOMNode.querySelector('.remove-point').addEventListener('click', removeNotePoint);
+		DOMNode.querySelector('input').addEventListener('click', checkUncheckPoint);
+
+		return DOMNode;
 	}
 	
 	dialogNewPointText.addEventListener('keypress', (event) => {
@@ -325,16 +355,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			event.preventDefault();
 			
 			let point = dialogNewPointText.innerText;
-			let newPoint = addNewTodoPointHTML(point);
-			
 			note.listContent.push({ isChecked : false, text : point });
-			let newPointNode = new DOMParser().parseFromString(newPoint, 'text/html').body.childNodes[0];
-			newPointNode.querySelector('.remove-point').addEventListener('click', removeNotePoint);
-			newPointNode.querySelector('input').addEventListener('click', checkUncheckPoint);
+			let newPoint = addNewTodoPointHTML(point);
+			let newPointNode = convertHTMLPointToDOMNode(newPoint);
+			
 			document.getElementById('dialog-todo').appendChild(newPointNode);
 			dialogNewPointText.innerText = '';
 			document.getElementById('dialog-NewPoint-Text-Placeholder').style.opacity = 1;
 		}
+	});
+	
+	dialogNewPointText.addEventListener('blur', () => {
+		// note.listContent.push({ isChecked : false, text : dialogNewPointText.innerText });
 	});
 	
 	let newNote = () => {
@@ -423,6 +455,24 @@ document.addEventListener('DOMContentLoaded', function () {
 			todoList.appendChild(point);
 		}
 	}
+	
+	let pressEnterToNotePoint = (event) => {
+		if (event.key == 'Enter') {
+			event.preventDefault();
+			let parent = event.currentTarget.parentNode;
+			let chacked = event.currentTarget.classList.contains('checked-point');
+			let newNode = convertHTMLPointToDOMNode(addNewTodoPointHTML('', chacked));
+			
+			if (event.currentTarget.nextSibling)
+				parent.insertBefore(newNode, event.currentTarget.nextSibling);
+			else
+				parent.appendChild(newNode);
+			
+				
+			newNode.querySelector('div:nth-child(2)').focus();
+			newNode.addEventListener('keypress', pressEnterToNotePoint);
+		}
+	};
 	
 	let removeNotePoint = (event) => {
 		let notePoint = event.currentTarget.parentNode.parentNode;
