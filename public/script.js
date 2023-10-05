@@ -261,9 +261,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 		for (let i = 0; i < textPointsTodo.length; i++) {
 			textPointsTodo[i].addEventListener('keypress', pressEnterToNotePoint);
+			textPointsTodo[i].addEventListener('paste', pasteToNotePoint);
+			textPointsTodo[i].querySelector('div:nth-child(2)').addEventListener('blur', blurFromNotePoint);
 		}		
 		for (let i = 0; i < textPointsChecked.length; i++) {
 			textPointsChecked[i].addEventListener('keypress', pressEnterToNotePoint);
+			textPointsChecked[i].addEventListener('paste', pasteToNotePoint);
+			textPointsChecked[i].querySelector('div:nth-child(2)').addEventListener('blur', blurFromNotePoint);
 		}
 		
 		let removeNotePointButton = dialog.querySelectorAll('.remove-point');
@@ -301,9 +305,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	let dialogNoteTitle = document.getElementById('dialog-NoteTitle');
 	let dialogNewPointText = document.getElementById('dialog-NewPoint-Text');
 	
-	dialogNoteTitle.addEventListener('input', showHidePlaceholder);
 	dialogNewPointText.addEventListener('input', showHidePlaceholder);
-	
+	dialogNoteTitle.addEventListener('input', showHidePlaceholder);
 	dialogNoteTitle.addEventListener('paste', (event) => {
 		event.preventDefault();
 		let pasteText = event.clipboardData.getData('text');
@@ -321,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	dialogNoteTitle.addEventListener('keypress', (event) => {
 		if (event.key == 'Enter') {
 			event.preventDefault();
+			note.title = dialogNoteTitle.innerText;
 			dialogNewPointText.focus();
 		}
 	});
@@ -331,22 +335,25 @@ document.addEventListener('DOMContentLoaded', function () {
 			<div><button class="remove-point">&#215;</button></div>
 			</div>`
 		if (checked)
-			html = convertTodoPointToChecked(html);
+			html = convertTodoToCheckedPoint(html);
 		return html;
 	}
 	
-	let convertTodoPointToChecked = (html) => {
+	let convertTodoToCheckedPoint = (html) => {
 		html = html.replace('todo-point', 'checked-point');
 		html = html.replace('<input type="checkbox">', '<input type="checkbox" checked>');
 		
 		return html;
 	}
 	
-	let convertHTMLPointToDOMNode = (html) => {
+	let convertHTMLToDOMNodePoint = (html) => {
 		let DOMNode = new DOMParser().parseFromString(html, 'text/html').body.childNodes[0];
 		DOMNode.querySelector('.remove-point').addEventListener('click', removeNotePoint);
 		DOMNode.querySelector('input').addEventListener('click', checkUncheckPoint);
-
+		DOMNode.querySelector('div:nth-child(2)').addEventListener('keypress', pressEnterToNotePoint);
+		DOMNode.querySelector('div:nth-child(2)').addEventListener('paste', pasteToNotePoint);		
+		DOMNode.querySelector('div:nth-child(2)').addEventListener('blur', blurFromNotePoint);
+		
 		return DOMNode;
 	}
 	
@@ -356,8 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			
 			let point = dialogNewPointText.innerText;
 			note.listContent.push({ isChecked : false, text : point });
-			let newPoint = addNewTodoPointHTML(point);
-			let newPointNode = convertHTMLPointToDOMNode(newPoint);
+			let newPointNode = convertHTMLToDOMNodePoint(addNewTodoPointHTML(point));
 			
 			document.getElementById('dialog-todo').appendChild(newPointNode);
 			dialogNewPointText.innerText = '';
@@ -365,8 +371,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	
-	dialogNewPointText.addEventListener('blur', () => {
-		// note.listContent.push({ isChecked : false, text : dialogNewPointText.innerText });
+	dialogNewPointText.addEventListener('paste', () => {
+		event.preventDefault();
+		let pasteText = event.clipboardData.getData('text');
+		let indexPaste = window.getSelection().baseOffset;
+		let innerText = dialogNewPointText.innerText;
+		dialogNewPointText.innerText = innerText.substring(0, indexPaste) + pasteText + innerText.substring(indexPaste);
 	});
 	
 	let newNote = () => {
@@ -374,6 +384,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		note.color = 'DEFAULT';
 		note.listContent = [];
 		note.title = '';
+		note.todo = [];
+		note.checked = [];
 	}
 	
 	let choiceSaveOrUpdateOrNothing = () => {
@@ -431,11 +443,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	let checkUncheckPoint = (event) => {
 		let notePoint = event.currentTarget.parentNode.parentNode;
 		let isChecked = event.currentTarget.checked;
-		let textPoint = notePoint.children[1].firstChild.textContent;
+		let text = notePoint.children[1].firstChild.textContent;
+		let index = [ ...notePoint.parentNode.children].indexOf(notePoint);
 		
 		for (let i = 0; i < note.listContent.length; i++) {
-			if (note.listContent[i].text == textPoint) {
+			if (note.listContent[i].text == text) {
 				note.listContent[i].isChecked = isChecked;
+				if (isChecked) {
+					note.todo.splice(index, 1);
+					note.checked.push(note.listContent[i]);
+				} else {
+					note.checked.splice(index, 1);
+					note.todo.push(note.listContent[i]);
+				}
 				moveCheckUncheckPoint(notePoint, isChecked);
 				break;
 			}
@@ -459,32 +479,63 @@ document.addEventListener('DOMContentLoaded', function () {
 	let pressEnterToNotePoint = (event) => {
 		if (event.key == 'Enter') {
 			event.preventDefault();
+			
 			let parent = event.currentTarget.parentNode;
 			let chacked = event.currentTarget.classList.contains('checked-point');
-			let newNode = convertHTMLPointToDOMNode(addNewTodoPointHTML('', chacked));
+			let newNode = convertHTMLToDOMNodePoint(addNewTodoPointHTML('', chacked));
 			
 			if (event.currentTarget.nextSibling)
 				parent.insertBefore(newNode, event.currentTarget.nextSibling);
 			else
 				parent.appendChild(newNode);
-			
-				
+
 			newNode.querySelector('div:nth-child(2)').focus();
 			newNode.addEventListener('keypress', pressEnterToNotePoint);
+			newNode.addEventListener('paste', pasteToNotePoint);
+			newNode.addEventListener('blur', blurFromNotePoint);
 		}
 	};
+	
+	let pasteToNotePoint = (event) => {
+		event.preventDefault();
+		let pasteText = event.clipboardData.getData('text');
+		let indexPaste = window.getSelection().baseOffset;
+		let innerText = event.target.innerText;
+		event.target.innerText = innerText.substring(0, indexPaste) + pasteText + innerText.substring(indexPaste);
+	}
+	
+	let blurFromNotePoint = (event) => {
+		let text = event.currentTarget.innerText;
+		let notePoint = event.currentTarget.parentNode;
+		let checked = event.currentTarget.parentNode.classList.contains('checked-point');
+		let arr = checked ? note.checked : note.todo;
+		let index = [ ...notePoint.parentNode.children].indexOf(notePoint);
+
+		for (let i = 0; i < note.listContent.length; i++) {
+			if (note.listContent[i].text == arr[index].text) {
+				note.listContent[i].text = text;
+				arr[index].text = text;
+				break;
+			}
+		}
+	};	
 	
 	let removeNotePoint = (event) => {
 		let notePoint = event.currentTarget.parentNode.parentNode;
 		let isChecked = notePoint.querySelector('input').checked;
-		let textPoint = notePoint.children[1].firstChild.textContent;
+		let text = notePoint.children[1].innerText;
+		let index = [ ...notePoint.parentNode.children].indexOf(notePoint);
 		
 		notePoint.remove();
 		for (let i = 0; i < note.listContent.length; i++) {
-			if (note.listContent[i].text == textPoint) {
+			if (note.listContent[i].text == text) {
 				note.listContent.splice(i, 1);
+				if (checked)
+					note.checked.splice(index, 1);
+				else
+					note.todo.splice(index, 1);
 				break;
 			}
 		}
 	}
-});		
+});
