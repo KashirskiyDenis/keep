@@ -166,9 +166,12 @@ dialog {
 	border: 1px solid #1978d2;
 	border-radius: 7px;
 	max-height: calc(100% - 150px);
-	padding: 16px;
+	padding: 0px;
 	overflow-y: auto;
-	padding-bottom: 0px;
+}
+dialog > div {
+	padding: 16px;
+	padding-bottom: 0px;	
 }
 dialog::-webkit-scrollbar-track {
 	border-top-right-radius: 6px;
@@ -216,13 +219,82 @@ dialog::-webkit-scrollbar-thumb {
 	border-bottom: 1px solid #1978d2;
 }
 .dialog-NoteFotter {
-	display: flex;
-	justify-content: space-between;
 	background-color: #ffffff;
 	position: sticky;
 	bottom: 0px;
-	padding: 1rem 0rem;
+	padding: 1rem;
 }
-#dialog-NoteRemove {
-
+.dialog-NoteFotter > div:nth-child(1) {
+	display: flex;
+	justify-content: space-between;
+}
+#color-picker {
+	display: none;
+	border: 1px solid #e3e3e3;
+	border-radius: 7px;
+	margin: 5px auto;
+	height: 37px;
+	background-color: #ffffff;
+}
+#color-picker > div {
+	border: 1px solid #e3e3e3;
+	height: 25px;
+	width: 25px;
+	border-radius: 25px;
+	display: flex;
+	margin: 5px;
+	float: left;
+}
+#color-picker > div:after {
+	content: attr(alt);
+	position: absolute;
+	padding: 2px 5px;
+	border-radius: 7px;
+	background: #919191;
+	opacity: 0.8;
+	color: #ffffff;
+	text-align: center;
+	display: none;
+}
+#color-picker > div:nth-child(-n+14):after {
+	transform: translate(calc(-100% + 40px), 27px);
+}
+#color-picker > div:nth-child(-n+7):after {
+	transform: translate(-13px, 27px);
+}
+#color-picker > div:hover:after {
+	display: block;
+}
+#color-picker > div:hover {
+	border-color: #0075ff;
+}
+.color-none {
+	background-color: #FFFFFF;
+}
+.color-FED6BC {
+	background-color: #FED6BC;
+}
+.color-FFFADD {
+	background-color: #FFFADD;
+}
+.color-DEF7FE {
+	background-color: #DEF7FE;
+}
+.color-E7ECFF {
+	background-color: #E7ECFF;
+}
+.color-C3FBD8 {
+	background-color: #C3FBD8;
+}
+.color-FDEED9 {
+	background-color: #FDEED9;
+}
+.color-F6FFF8 {
+	background-color: #F6FFF8;
+}
+.color-B5F2EA {
+	background-color: #B5F2EA;
+}
+.color-C6D8FF {
+	background-color: #C6D8FF;
 }

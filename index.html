@@ -13,25 +13,41 @@
 	
 	<body>
 		<dialog id="dialog-Note">
-			<div id="dialog-NoteTitle-Placeholder">Введите название</div>
-			<div id="dialog-NoteTitle" class="note-title" contenteditable></div>
-			<div id="dialog-NewPoint">
-				<div class="dialog-NewPoint-Plus">+</div>
-				<div id="dialog-NewPoint-Text-Placeholder">Введите пункт</div>
-				<div id="dialog-NewPoint-Text" contenteditable></div>
-			</div>
-			<div id="dialog-todo" class="todo">
-			</div>
-			<div id="dialog-checked" class="checked">
+			<div>
+				<div id="dialog-NoteTitle-Placeholder">Введите название</div>
+				<div id="dialog-NoteTitle" class="note-title" contenteditable></div>
+				<div id="dialog-NewPoint">
+					<div class="dialog-NewPoint-Plus">+</div>
+					<div id="dialog-NewPoint-Text-Placeholder">Введите пункт</div>
+					<div id="dialog-NewPoint-Text" contenteditable></div>
+				</div>
+				<div id="dialog-todo" class="todo">
+				</div>
+				<div id="dialog-checked" class="checked">
+				</div>
 			</div>
 			<div class="dialog-NoteFotter">
 				<div>
-					<button id="dialog-NoteColor">Цвет</button>
-					<button id="dialog-NoteRemove">Удалить</button>
+					<div>
+						<button id="dialog-NoteColor">Цвет</button>
+						<button id="dialog-NoteRemove">Удалить</button>
+					</div>
+					<div>
+						<button id="dialog-NoteClose">Закрыть</button>
+					</div>
 				</div>
-				<div>
-					<button id="dialog-NoteClose">Закрыть</button>
-				</div>
+				<div id="color-picker">
+					<div class="color-none" alt="По умолчанию"></div>
+					<div class="color-FED6BC" alt="Нежно-персиковый"></div>
+					<div class="color-FFFADD" alt="Светло-желтый"></div>
+					<div class="color-DEF7FE" alt="Пастельно-небесный"></div>
+					<div class="color-E7ECFF" alt="Светло-лиловый"></div>
+					<div class="color-C3FBD8" alt="Салатовый"></div>
+					<div class="color-FDEED9" alt="Нежно-розовый"></div>
+					<div class="color-F6FFF8" alt="Лаймовый"></div>
+					<div class="color-B5F2EA" alt="Аквамариновый"></div>
+					<div class="color-C6D8FF" alt="Сиреневый"></div>
+				</div>				
 			</div>
 		</dialog>
 		<div class="container">
@@ -41,10 +57,10 @@
 			<main id="notes" class="content">
 				input-notes-HTML
 			</main>
-		</div>
-		<footer>
+			</div>
+			<footer>
 			<button id="add-note" class="button button-circle button-circle-add">&#43;</button>
-		</footer>
+			</footer>
 	</body>
 	
 </html>

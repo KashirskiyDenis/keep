@@ -20,6 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		choiceSaveOrUpdateOrNothing();	
 		noteDialog.close();
 		clearNoteDialog();
+	});
+	
+	document.getElementById('dialog-NoteColor').addEventListener('click', () => {
+		let block = document.getElementById('color-picker').style.display;
+		if (block == 'none')
+			document.getElementById('color-picker').style.display = 'block';
+		else
+			document.getElementById('color-picker').style.display = 'none';
 	});	
 	
 	document.getElementById('dialog-NoteRemove').addEventListener('click', () => {
@@ -363,6 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			
 			let point = dialogNewPointText.innerText;
 			note.listContent.push({ isChecked : false, text : point });
+			note.todo.push({ isChecked : false, text : point });
 			let newPointNode = convertHTMLToDOMNodePoint(addNewTodoPointHTML(point));
 			
 			document.getElementById('dialog-todo').appendChild(newPointNode);
