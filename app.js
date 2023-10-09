@@ -53,6 +53,7 @@ async function readNotesFromGoogleKeep() {
 }
 
 await readNotesFromGoogleKeep();
+notes.sort((a, b) => a.order - b.order);
 
 let findNote = (id) => {
 	for (let i = 0; i < notes.length; i++) {
@@ -71,7 +72,7 @@ let createNote = async (rawNote) => {
 }
 
 let renderNote = (note) => {
-	let noteHTML =`<div id="${note.createdTimestampUsec}" class="note">`;
+	let noteHTML =`<div id="${note.createdTimestampUsec}" class="note ${note.color}">`;
 	noteHTML += `<div class="note-title">${note.title}</div>`;
 	noteHTML += `<div class="todo">`;
 	for (let i = 0; i < note.todo.length; i++) {
@@ -113,6 +114,7 @@ let removeNote = async (id) => {
 
 function requestListener(req, res) {
 	let path = parse(req.url).pathname;
+	let method = req.method;
 	
 	if (path == '' || path == '/') {
 		readFile('./index.html')
@@ -127,7 +129,6 @@ function requestListener(req, res) {
 			res.end(content);
 		});
 	} else if (path.match(/\/api\/note\/[0-9]*/)) {
-		let method = req.method;
 		let id = +path.replace('/api/note/', '');
 		
 		if (method == 'GET') {
@@ -154,7 +155,6 @@ function requestListener(req, res) {
 			});
 		}
 	} else if (path.match(/\/api\/note/)) {	
-		let method = req.method;
 		if (method == 'PUT') {
 			let bodyReq = '';
 			
@@ -189,6 +189,22 @@ function requestListener(req, res) {
 					res.end(noteHTML);
 				});
 			});
+		}
+	} else if (path.match(/\/api\/note\/order/)) {
+		if (method == 'POST') {
+			let bodyReq = '';
+			req.on('data', (chankData) => {
+				bodyReq += chankData;
+			});
+			req.on('end', () => {
+				updateNote(bodyReq)
+				.then(note => {
+					let noteHTML = renderNote(note);
+					res.setHeader('Content-Type', 'text/html');
+					res.writeHead(200);
+					res.end(noteHTML);
+				});
+			});		
 		}
 	} else if (path == '/favicon') {
 		readFile('./public' + path + '.png')

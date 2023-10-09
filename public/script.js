@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('dialog-todo').innerHTML = '';
 		document.getElementById('dialog-checked').innerHTML = '';
 		document.body.style.overflowY = 'auto';
+		noteDialog.className = '';
 		flagCloseNoteDialog = false;
 	}
 	
@@ -23,11 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	
 	document.getElementById('dialog-NoteColor').addEventListener('click', () => {
-		let block = document.getElementById('color-picker').style.display;
-		if (block == 'none')
-			document.getElementById('color-picker').style.display = 'block';
+		let block = document.getElementById('color-picker').classList.contains('color-picker-hidden');
+		if (block)
+			document.getElementById('color-picker').classList.remove('color-picker-hidden');
 		else
-			document.getElementById('color-picker').style.display = 'none';
+			document.getElementById('color-picker').classList.add('color-picker-hidden');
 	});	
 	
 	document.getElementById('dialog-NoteRemove').addEventListener('click', () => {
@@ -117,13 +118,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	let draggbleNote = null;
 	let shiftX = null;
 	let shiftY = null;
-	let noteIndex = -1;
+	let noteIndexTo = -1;
+	let noteIndexFrom = -1;
 	let noteMoveFlag = false;
 	
 	let mouseDownNote = (event) => {		
 		for (let i = 0; i < notes.length; i++) {
 			if (event.currentTarget == notes[i]) {
-				noteIndex = i;
+				noteIndexTo = i;
+				noteIndexFrom = i;
 				break;
 			}
 		}
@@ -173,12 +176,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (noteOver) {
 			for (let i = 0; i < notes.length; i++) {
 				if (noteOver == notes[i]) {
-					if (i > noteIndex) {
+					if (i > noteIndexTo) {
 						notes[i].insertAdjacentElement('afterend', hole);
 					} else {
 						notes[i].insertAdjacentElement('beforebegin', hole);
 					}
-					noteIndex = i;
+					noteIndexTo = i;
 					break;
 				}
 			}
@@ -207,8 +210,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (!noteMoveFlag) {
 			openNote(draggbleNote.id);
 		}
+		
+		changeIndexNotes();
 		draggbleNote = null;
-		noteIndex = -1;
+		noteIndexTo = -1;
 		noteMoveFlag = false;
 	}
 	
@@ -228,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	
 	let renderNoteDialog = (note) => {
+		noteDialog.className = note.color;
 		document.getElementById('dialog-NoteTitle').innerHTML = note.title;
 		
 		if (note.title.length != 0) {
@@ -545,6 +551,43 @@ document.addEventListener('DOMContentLoaded', function () {
 					note.todo.splice(index, 1);
 				break;
 			}
+		}
+	}
+	
+	let changeColorNote = (event) => {
+		let color = event.target.className;
+		note.color = color;
+		noteDialog.className = color;
+	}
+	
+	let colors = document.querySelectorAll('#color-picker > div');
+	for (let i = 0; i < colors.length; i++) {
+		colors[i].addEventListener('click', changeColorNote);
+	}
+	
+	let updateNoteOrder = (order) => {
+		ajax('POST', '/api/note/order', JSON.stringify(order))
+		.then(response => {
+			console.log('Success');
+		}).catch(error => {
+			alert(error);
+		});
+	}
+	
+	let changeIndexNotes = () => {
+		if (noteIndexFrom != noteIndexTo) {
+			let map = new Map();
+			map.set(notes[noteIndexFrom].id, { from : noteIndexFrom, to : noteIndexTo})
+			if (noteIndexFrom > noteIndexTo) {
+				for (let i = noteIndexTo; i < noteIndexFrom; i++) {
+					map.set(notes[i].id, { from : i, to : i + 1});
+				}
+			} else {
+				for (let i = noteIndexFrom + 1; i <= noteIndexTo; i++) {
+					map.set(notes[i].id, { from : i, to : i - 1});
+				}
+			}
+			console.log(map);
 		}
 	}
 });

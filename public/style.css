@@ -229,37 +229,44 @@ dialog::-webkit-scrollbar-thumb {
 	justify-content: space-between;
 }
 #color-picker {
-	display: none;
 	border: 1px solid #e3e3e3;
 	border-radius: 7px;
 	margin: 5px auto;
 	height: 37px;
 	background-color: #ffffff;
+	text-align: center;
+}
+.color-picker-hidden {
+	display: none;
 }
 #color-picker > div {
 	border: 1px solid #e3e3e3;
 	height: 25px;
 	width: 25px;
 	border-radius: 25px;
-	display: flex;
-	margin: 5px;
-	float: left;
+	margin: 5px 0px 5px 5px;
+	/* float: left; */
+	display: inline-block;
+}
+#color-picker > div:last-child {
+	margin-right: 5px;
 }
 #color-picker > div:after {
 	content: attr(alt);
 	position: absolute;
-	padding: 2px 5px;
+	padding: 2px 10px;
 	border-radius: 7px;
 	background: #919191;
 	opacity: 0.8;
 	color: #ffffff;
 	text-align: center;
 	display: none;
+	width: max-content;
 }
-#color-picker > div:nth-child(-n+14):after {
+#color-picker > div:nth-child(-n+16):after {
 	transform: translate(calc(-100% + 40px), 27px);
 }
-#color-picker > div:nth-child(-n+7):after {
+#color-picker > div:nth-child(-n+8):after {
 	transform: translate(-13px, 27px);
 }
 #color-picker > div:hover:after {
@@ -268,33 +275,48 @@ dialog::-webkit-scrollbar-thumb {
 #color-picker > div:hover {
 	border-color: #0075ff;
 }
-.color-none {
+.none {
 	background-color: #FFFFFF;
 }
-.color-FED6BC {
+.FED6BC {
 	background-color: #FED6BC;
 }
-.color-FFFADD {
+.FFFADD {
 	background-color: #FFFADD;
 }
-.color-DEF7FE {
+.DEF7FE {
 	background-color: #DEF7FE;
 }
-.color-E7ECFF {
+.E7ECFF {
 	background-color: #E7ECFF;
 }
-.color-C3FBD8 {
+.C3FBD8 {
 	background-color: #C3FBD8;
 }
-.color-FDEED9 {
+.FDEED9 {
 	background-color: #FDEED9;
 }
-.color-F6FFF8 {
-	background-color: #F6FFF8;
+.DFF9E5 {
+	background-color: #DFF9E5;
 }
-.color-B5F2EA {
+.B5F2EA {
 	background-color: #B5F2EA;
 }
-.color-C6D8FF {
+.C6D8FF {
 	background-color: #C6D8FF;
+}
+.B39F7A {
+	background-color: #B39F7A;
+}
+.FAE7B5 {
+	background-color: #FAE7B5;
+}
+.FFC1CC {
+	background-color: #FFC1CC;
+}
+.FFF0F5 {
+	background-color: #FFF0F5;
+}
+.A8E4A0 {
+	background-color: #A8E4A0;
 }
