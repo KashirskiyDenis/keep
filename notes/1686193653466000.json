@@ -1,1 +1,48 @@
-{"color":"DEFAULT","order":6,"isTrashed":false,"isPinned":false,"isArchived":false,"listContent":[{"text":"Мультиметр","isChecked":false},{"text":"Сетка на лоджию","isChecked":false},{"text":"Сплит система","isChecked":false},{"text":"Уборка","isChecked":true}],"title":"Дом","userEditedTimestampUsec":1694155455039000,"createdTimestampUsec":1686193653466000,"todo":[{"text":"Мультиметр","isChecked":false},{"text":"Сетка на лоджию","isChecked":false},{"text":"Сплит система","isChecked":false}],"checked":[{"text":"Уборка","isChecked":true}]}
+{
+	"color": "DEFAULT",
+	"order": 6,
+	"isTrashed": false,
+	"isPinned": false,
+	"isArchived": false,
+	"listContent": [
+		{
+			"text": "Мультиметр",
+			"isChecked": false
+		},
+		{
+			"text": "Сетка на лоджию",
+			"isChecked": false
+		},
+		{
+			"text": "Сплит система",
+			"isChecked": false
+		},
+		{
+			"text": "Уборка",
+			"isChecked": true
+		}
+	],
+	"title": "Дом",
+	"userEditedTimestampUsec": 1694155455039000,
+	"createdTimestampUsec": 1686193653466000,
+	"todo": [
+		{
+			"text": "Мультиметр",
+			"isChecked": false
+		},
+		{
+			"text": "Сетка на лоджию",
+			"isChecked": false
+		},
+		{
+			"text": "Сплит система",
+			"isChecked": false
+		}
+	],
+	"checked": [
+		{
+			"text": "Уборка",
+			"isChecked": true
+		}
+	]
+}
