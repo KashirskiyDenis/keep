@@ -1,7 +1,7 @@
 {
   "name": "keep",
   "version": "1.0.0",
-  "description": "Keep PWA",
+  "description": "note",
   "main": "app.js",
   "type": "module",  
   "scripts": {
@@ -13,8 +13,7 @@
     "url": "git+https://github.com/KashirskiyDenis/keep.git"
   },
   "keywords": [
-    "keep",
-    "PWA"
+    "note"
   ],
   "author": "Denis Kashirskiy",
   "license": "MIT",

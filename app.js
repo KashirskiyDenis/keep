@@ -5,7 +5,7 @@ import { appendFile, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { parse } from 'node:url';
 import { config } from './config/index.js';
 
-let notes = [];
+let notes = new Map();
 
 let orderBy = (note, field) => {
 	let compareString = (a, b) => a[field].localeCompare(b[field]);
@@ -44,7 +44,7 @@ async function readNotesFromGoogleKeep() {
 				if (rawNote.length == 0)
 					continue;
 				let note = formateNote(rawNote);
-				notes.push(note);
+				notes.set(note.createdTimestampUsec, note);
 			} catch (error) {
 				console.log(error.message);
 			}
@@ -53,21 +53,22 @@ async function readNotesFromGoogleKeep() {
 }
 
 await readNotesFromGoogleKeep();
-notes.sort((a, b) => a.order - b.order);
+
+let orderNotes = () => {
+	notes = new Map([ ...notes.entries()].sort((a, b) => a[1].order - b[1].order));
+}
+
+orderNotes();
 
 let findNote = (id) => {
-	for (let i = 0; i < notes.length; i++) {
-		if (id == notes[i].createdTimestampUsec)
-		return notes[i];
-	}
-	return null;
+	return notes.get(id);
 }
 
 let createNote = async (rawNote) => {
 	let note = formateNote(rawNote);
 	note.createdTimestampUsec = +(new Date()) * 1000;
 	await appendFile(`./notes/${note.createdTimestampUsec}.json`, rawNote);
-	notes.push(note);
+	notes.set(note.createdTimestampUsec, note);
 	return note;
 }
 
@@ -91,25 +92,33 @@ let renderNote = (note) => {
 
 let updateNote = async (note) => {
 	let noteID = JSON.parse(note).createdTimestampUsec;
-	for (let i = 0; i < notes.length; i++) {
-		if (noteID == notes[i].createdTimestampUsec) {
-			await writeFile(`./notes/${noteID}.json`, note);
-			note = formateNote(note);
-			notes[i] = note;
-			return note;
-		}
+	
+	if (notes.has(noteID)) {
+		await writeFile(`./notes/${noteID}.json`, note);
+		note = formateNote(note);
+		notes.set(noteID, note);
+		return note;
 	}
 }
 
 let removeNote = async (id) => {
-	for (let i = 0; i < notes.length; i++) {
-		if (id == notes[i].createdTimestampUsec) {
-			notes.splice(i, 1);
-			await rm(`./notes/${id}.json`);
-			return true;
-		}
+	if (notes.has(id)) {
+		notes.delete(id);
+		await rm(`./notes/${id}.json`);
+		return true;
 	}
 	return false;
+}
+
+let updateNoteOrder = async (data) => {
+	data = JSON.parse(data);
+	for (let i = 0; i < data.length; i++) {
+		let id = +data[i].name;
+		let note = notes.get(id);
+		note.order = data[i].value.to;
+		updateNote(JSON.stringify(note));
+	}
+	orderNotes();
 }
 
 function requestListener(req, res) {
@@ -121,14 +130,14 @@ function requestListener(req, res) {
 		.then(content => {
 			let replaceText = '';
 			content = content.toString();
-			for (let i = 0; i < notes.length; i++) {
-				replaceText += renderNote(notes[i]);
+			for (let note of notes.values()) {
+				replaceText += renderNote(note);
 			}
 			content = content.replace('input-notes-HTML', replaceText);
 			res.writeHead(200);
 			res.end(content);
 		});
-	} else if (path.match(/\/api\/note\/[0-9]*/)) {
+	} else if (path.match(/\/api\/note\/[0-9]+/)) {
 		let id = +path.replace('/api/note/', '');
 		
 		if (method == 'GET') {
@@ -154,7 +163,7 @@ function requestListener(req, res) {
 				}
 			});
 		}
-	} else if (path.match(/\/api\/note/)) {	
+	} else if (path.match(/\/api\/note$/)) {
 		if (method == 'PUT') {
 			let bodyReq = '';
 			
@@ -190,19 +199,19 @@ function requestListener(req, res) {
 				});
 			});
 		}
-	} else if (path.match(/\/api\/note\/order/)) {
+	} else if (path.match(/\/api\/note\/order$/)) {
 		if (method == 'POST') {
 			let bodyReq = '';
 			req.on('data', (chankData) => {
 				bodyReq += chankData;
 			});
 			req.on('end', () => {
-				updateNote(bodyReq)
+				updateNoteOrder(bodyReq)
 				.then(note => {
-					let noteHTML = renderNote(note);
+				
 					res.setHeader('Content-Type', 'text/html');
 					res.writeHead(200);
-					res.end(noteHTML);
+					res.end();
 				});
 			});		
 		}

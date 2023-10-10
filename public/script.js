@@ -577,17 +577,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	let changeIndexNotes = () => {
 		if (noteIndexFrom != noteIndexTo) {
 			let map = new Map();
-			map.set(notes[noteIndexFrom].id, { from : noteIndexFrom, to : noteIndexTo})
+			map.set(notes[noteIndexTo].id, { to : noteIndexTo })
 			if (noteIndexFrom > noteIndexTo) {
-				for (let i = noteIndexTo; i < noteIndexFrom; i++) {
-					map.set(notes[i].id, { from : i, to : i + 1});
+				for (let i = noteIndexTo; i <= noteIndexFrom; i++) {
+					map.set(notes[i].id, { to : i });
 				}
 			} else {
-				for (let i = noteIndexFrom + 1; i <= noteIndexTo; i++) {
-					map.set(notes[i].id, { from : i, to : i - 1});
+				for (let i = noteIndexFrom; i <= noteIndexTo; i++) {
+					map.set(notes[i].id, { to : i });
 				}
 			}
-			console.log(map);
+			updateNoteOrder(Array.from(map, ([name, value]) => ({ name, value })));
 		}
 	}
 });

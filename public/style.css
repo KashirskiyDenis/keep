@@ -245,7 +245,6 @@ dialog::-webkit-scrollbar-thumb {
 	width: 25px;
 	border-radius: 25px;
 	margin: 5px 0px 5px 5px;
-	/* float: left; */
 	display: inline-block;
 }
 #color-picker > div:last-child {
@@ -305,8 +304,8 @@ dialog::-webkit-scrollbar-thumb {
 .C6D8FF {
 	background-color: #C6D8FF;
 }
-.B39F7A {
-	background-color: #B39F7A;
+.FFDEAD {
+	background-color: #FFDEAD;
 }
 .FAE7B5 {
 	background-color: #FAE7B5;
